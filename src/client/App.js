@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
+import Header from './Header.js';
+import Nav from './Nav.js';
+import Body from './Body.js';
 import './app.css';
-import ReactImage from './react.png';
 
 export default class App extends Component {
-  state = { username: null };
-
   componentDidMount() {
-    fetch('/api/getUsername')
-      .then(res => res.json())
-      .then(user => this.setState({ username: user.username }));
+    document.title = 'Re-video';
   }
 
   render() {
-    const { username } = this.state;
     return (
-      <div>
-        {username ? <h1>{`Hello ${username}`}</h1> : <h1>Loading.. please wait!</h1>}
-        <img src={ReactImage} alt="react" />
-      </div>
+      <>
+        <Header/>
+        <Nav/>
+        <Body/>
+      </>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './app.scss';
+import './app.css';
 
 export default class Header extends Component {
   componentDidMount() {
