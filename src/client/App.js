@@ -6,14 +6,16 @@ import './app.css';
 
 export default class App extends Component {
   componentDidMount() {
-    document.title = 'Re-video';
+    document.title = 'SensebeDictionary';
   }
 
   render() {
     return (
       <>
-        <Header/>
-        <Nav/>
+        <div className="Container">
+          <Nav/>
+          <Header/>
+        </div>
         <Body/>
       </>
     );
