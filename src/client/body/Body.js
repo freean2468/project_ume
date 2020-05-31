@@ -1,47 +1,9 @@
 import React, { Component } from 'react';
-import './app.css';
-import ReactImage from './react.png';
-import YPlayer from './YPlayer.js';
-
-class SliderControl extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isChecked : props.checked,
-      id : props.id
-    };
-
-    this.toggleChange = this.toggleChange.bind(this);
-  }
-
-  toggleChange = () => {
-    this.setState({
-      isChecked: !this.state.isChecked,
-    });
-  }
-
-  render() {
-    return (
-      <input type="radio" id={this.state.id} checked={this.state.isChecked}
-        name="slider-control" onChange={this.toggleChange}/>
-    );
-  }
-}
+import './body.css';
+import SliderControl from './SliderControl.js';
+import YPlayer from './YPlayer';
 
 export default class Body extends Component {
-  constructor(props) {
-    super(props)
-    this.handleChecked = this.handleChecked.bind(this)
-  }
-  
-  componentDidMount() {
-
-  }
-
-  handleChecked() {
-
-  }
-
   render() {
     return (
       <div className="Body">
@@ -50,14 +12,17 @@ export default class Body extends Component {
         <SliderControl id="s-3" checked={false}/>
         <div className="js-slider">
           <figure className="js-slider_item img-1">
-            <YPlayer id="dcye5-mzluo" container="iframe-container" class="iframe"/>
+            <YPlayer id="3tK_fPgGT-A" link="1YafTzdBGV0" idx="0" 
+              container="iframe-container"  class="iframe"/>
           </figure>
           <figure className="js-slider_item img-2">
-            <YPlayer id="dcye5-mzluo" container="iframe-container" class="iframe"/>
+          <YPlayer id="3tK_fPgGT-A" link="1YafTzdBGV0" idx="1" 
+            container="iframe-container"  class="iframe"/>
           </figure>
           <figure className="js-slider_item img-3">
             <div className="js-slider_img">
-              <YPlayer id="dcye5-mzluo" container="iframe-container" class="iframe"/>
+            <YPlayer id="3tK_fPgGT-A" link="1YafTzdBGV0" idx="2" 
+              container="iframe-container"  class="iframe"/>
               {/* <img className="c-img-h-full" src={ReactImage} alt=""/>   */}
             </div>
             <figcaption className="wo-caption">

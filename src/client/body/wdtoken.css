@@ -1,0 +1,31 @@
+
+.Body .WdToken {
+    display:inline-block;
+    cursor: pointer;
+}
+
+/* .Body .WdToken::after{ 
+    position: absolute;
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    background: #e60012;
+    transform: scale(1.5);
+} */
+
+.Body .WdToken.Active{
+    position: absolute;
+    /* width: 1rem; */
+    height: 1rem;
+    border-radius: 1rem;
+    background: rgba(98, 231, 255, 0.521);
+    transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1);
+    animation: fade 1s infinite;
+    pointer-events:none;
+}
+
+@keyframes fade {
+    /* 0%,100% { opacity: 0 } */
+    0%, 100% { opacity: 0.5 }
+}
