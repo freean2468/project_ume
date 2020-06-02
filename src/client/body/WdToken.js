@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from '../../../node_modules/react';
 import './WdToken.css';
 
 class WdToken extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isActive : false,
-            width : 0
+            isActive : false
         }
         this.ref = React.createRef();
     }
-
 
     render() {
         return (
@@ -25,11 +23,28 @@ class WdToken extends Component {
                 {this.state.isActive && 
                     <span className="WdToken Active" style={{
                         width: `${this.ref.current.offsetWidth}px`,
-                        transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) scale(1.2, 2)`
+                        transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) scale(1.2, 1.8)`
                     }}>
                     </span>
                 }
-                &nbsp;
+                {this.props.isSpace &&
+                    <span>&nbsp;</span>
+                }
+                {this.state.isActive &&
+                    <span className="TokenInfo" style={{
+
+                    }}>
+                        <div>
+                            {this.props.ct}
+                        </div>
+                        <div>
+                            {this.props.lt}
+                        </div>
+                        <div>
+                            {this.props.pp}
+                        </div>
+                    </span>
+                }
             </>
         );
     }

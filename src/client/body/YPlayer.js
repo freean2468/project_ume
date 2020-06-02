@@ -17,16 +17,19 @@ import TextDisplay from './TextDisplay'
   onStateChange={func}              // defaults -> noop
   onPlaybackRateChange={func}       // defaults -> noop
   onPlaybackQualityChange={func}    // defaults -> noop
+
+  // custom parameter
+  ref={ref}
 /> */}
  
 export default class YPlayer extends Component {
   constructor(props) {
     super(props)
 
-    this.updateSecondsRef = React.createRef();
+    this.textDisplayRef = React.createRef();
 
     this.state = {
-      child : <TextDisplay id={props.id} ref={this.updateSecondsRef}/>,
+      textChild : <TextDisplay id={props.id} ref={this.textDisplayRef}/>,
       seconds : 0,
       interval : null
     }
@@ -34,25 +37,25 @@ export default class YPlayer extends Component {
     this.handleOnPause = this.handleOnPause.bind(this)
     this.handleOnPlay = this.handleOnPlay.bind(this)
 
-    this.el = document.createElement("div")
-    this.el.setAttribute('class', 'TextDisplayContainer')
+    this.textDisplayContainerEl = document.createElement("div")
+    this.textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer')
   }
 
   componentDidMount = () => {
     const container = document.getElementsByClassName(this.props.container)[this.props.idx];
-    container.appendChild(this.el);
+    container.appendChild(this.textDisplayContainerEl);
   };
   
   componentWillUnmount = () => {
     const container = document.getElementsByClassName(this.props.container)[this.props.idx];
-    container.removeChild(this.el);
+    container.removeChild(this.textDisplayContainerEl);
     clearInterval(this.state.interval);
   };
 
   setSeconds(e) {
     let ct = e.target.getCurrentTime()
     this.setState({seconds : ct})
-    this.updateSecondsRef.current.updateSeconds(ct);
+    this.textDisplayRef.current.updateSeconds(ct);
   }
 
   handleOnPlay(e) {
@@ -62,7 +65,7 @@ export default class YPlayer extends Component {
   }
 
   handleOnPause(e) {
-    clearInterval(this.state.interval);
+    // clearInterval(this.state.interval);
   }
 
   render() {
@@ -86,10 +89,11 @@ export default class YPlayer extends Component {
           opts={opts} 
           onPause={this.handleOnPause} 
           onPlay={this.handleOnPlay}
+          ref={this.state.yplaerRef}
         />
         {ReactDOM.createPortal(
-          this.state.child,
-          this.el
+          this.state.textChild,
+          this.textDisplayContainerEl
         )}
       </>
     );
@@ -100,31 +104,3 @@ export default class YPlayer extends Component {
     event.target.pauseVideo();
   }
 }
-
-// import useScript from './hooks/useScript';
-
-// const YPlayer = props => {
-//     useScript('https://www.youtube.com/iframe_api');
-
-//     // create Youtube player object so that we could control it.
-//     const youtubePlayer = new YT.Player('Player', {
-//         width: '360',
-//         height: '640',
-//         videoId: 'M7lc1UVf-VE',
-//         events: {
-//             'onReady': ()=>console.log('YP ready'),
-//             'onStateChange': ()=>console.log('YP state change'),
-//             'onPlaybackQualityChange': function(){console.log('quality')},
-//             'onPlaybackRateChange': function(){console.log('rate')},
-//             'onError': function(e){console.log(e)}
-//         },
-//         host: 'https://www.youtube.com',
-//         playerVars: { 
-//             // 'origin':'',
-//             'rel':0
-//         }
-//     });
-
-//     return youtubePlayer;
-// }
-
