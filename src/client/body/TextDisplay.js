@@ -35,7 +35,19 @@ export default class TextDisplay extends Component {
                 let ct = stc[j].ct,
                     pp = stc[j].pp,
                     wd = stc[j].wd,
+                    dpList = [],
+                    ltList = [],
                     wholeLength = -1;
+
+                for (let k = 0; k < wd.length; ++k) {
+                    let dp = wd[k].dp;
+                    if (dp === ''){
+                        dp = wd[k].ct;
+                    }
+                    dpList.push(dp);
+                    ltList.push(wd[k].lt);
+                }
+
                 for (let k = 0; k < wd.length; ++k) {
                     let dp = wd[k].dp,
                         isSpace = true;
@@ -51,7 +63,8 @@ export default class TextDisplay extends Component {
                         isSpace = false;
                     }
 
-                    this.state.scrt[i].push(<WdToken ct={ct} pp={pp} lt={wd[k].lt} 
+                    this.state.scrt[i].push(<WdToken dpList={dpList} pp={pp} lt={wd[k].lt}
+                                            ltList={ltList} idx={k}
                                             key={`${i}${j}${k}`} token={dp}
                                             isSpace={isSpace}/>);
                 }

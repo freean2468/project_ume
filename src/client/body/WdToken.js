@@ -31,19 +31,50 @@ class WdToken extends Component {
                     <span>&nbsp;</span>
                 }
                 {this.state.isActive &&
-                    <span className="TokenInfo" style={{
-
-                    }}>
-                        <div>
-                            {this.props.ct}
-                        </div>
-                        <div>
-                            {this.props.lt}
-                        </div>
-                        <div>
-                            {this.props.pp}
-                        </div>
-                    </span>
+                    <div className="TokenInfo">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        본문
+                                    </td>
+                                    {
+                                        this.props.dpList.map((dp, idx)=>
+                                            <td key={idx}>
+                                                {
+                                                    this.props.idx === idx ?
+                                                        <b>{dp}</b> : dp
+                                                }
+                                            </td>
+                                        )
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>
+                                        직역
+                                    </td>
+                                    {
+                                        this.props.ltList.map((lt, idx)=>
+                                            <td key={idx}>
+                                                {
+                                                    this.props.idx === idx ?
+                                                        <b>{lt}</b> : lt
+                                                }
+                                            </td>
+                                        )
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>
+                                        의역
+                                    </td>
+                                    <td colSpan={42}>
+                                        {this.props.pp}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 }
             </>
         );
