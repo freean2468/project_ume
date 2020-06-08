@@ -35,6 +35,7 @@ export default class TextDisplay extends Component {
                 let ct = stc[j].ct,
                     pp = stc[j].pp,
                     wd = stc[j].wd,
+                    strt = stc[j].strt,
                     dpList = [],
                     ltList = [],
                     wholeLength = -1;
@@ -63,8 +64,19 @@ export default class TextDisplay extends Component {
                         isSpace = false;
                     }
 
+                    let strtPick = null;
+                    
+                    if (strt !== undefined) {
+                        for (let l = 0; l < strt.length; ++l) {
+                            if (strt[l].from <= k && k <= strt[l].to) {
+                                strtPick = strt[l];
+                                break;
+                            }
+                        }
+                    }
+
                     this.state.scrt[i].push(<WdToken dpList={dpList} pp={pp} lt={wd[k].lt}
-                                            ltList={ltList} idx={k}
+                                            ltList={ltList} idx={k} strt={strtPick}
                                             key={`${i}${j}${k}`} token={dp}
                                             isSpace={isSpace}/>);
                 }

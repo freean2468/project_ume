@@ -3,6 +3,7 @@
     display:inline-block;
     cursor: pointer;
     pointer-events: auto;
+    /* color:rgb(255,255,255,1); */
     /* background: rgba(98, 231, 255, 0.521); */
     /* height: 1rem; */
     /* border-radius: 1rem; */
@@ -34,6 +35,22 @@
 
 .Body .TokenInfo {
     display: inline-block;
+    /* border: 0.05em solid white; */
+    /* border-radius: 10px; */
+    /* white-space:nowrap; */
+    pointer-events:none;
+    background-color: rgba(158, 69, 69, 0);
+    overflow: visible;
+    position: absolute;
+    top:90%;
+    left:50%;
+    width:auto;
+    transform : translate(-50%, -150%);
+    color:RGB(255,255,255,1);
+}
+/* 
+.Body .TokenInfo {
+    display: inline-block;
     border: 0.05em solid white;
     border-radius: 10px;
     white-space:nowrap;
@@ -46,34 +63,107 @@
     width:auto;
     transform : translate(-50%, -220%);
     color:RGB(255,255,255,1);
+} */
+
+.Body .TokenInfo .StrtInfo {
+    display: inline-block;
+    border: 0.05em solid white;
+    border-radius: 10px;
+    white-space:nowrap;
+    pointer-events:none;
+    background-color: rgba(158, 69, 69, 0.1);
+    width:auto;
+    float:right;
 }
 
-.Body .TokenInfo table {
-    border-collapse: collapse;
-    /* border-spacing: 0.2em 0; */
+.Body .TokenInfo .StrtToken {
+    text-align:center;
+    display:inline-table;
+    border-collapse:collapse;
+    background-color: rgba(158, 69, 69, 0.1);
 }
 
-.Body .TokenInfo table b {
-    color:yellow;
-}
-
-.Body .TokenInfo td {
+.Body .TokenInfo .StrtToken td {
     text-align:center;
     border: 0.001em solid RGB(255,255,255,0.5);
     padding: 0 0.1em;
 }
-
-.Body .TokenInfo table tr:first-child td {
-    border-top: 0;
-}
-.Body .TokenInfo table tr td:first-child {
-    border-left: 0;
-}
-.Body .TokenInfo table tr:last-child td {
+.Body .TokenInfo .StrtToken tr:first-child td{
     border-bottom: 0;
 }
-.Body .TokenInfo table tr td:last-child {
+.Body .TokenInfo .StrtToken tr:last-child td{
+    border-top: 0;
+    border-bottom: 0;
+}
+.Body .TokenInfo .StrtToken:first-child tr td:first-child{
+    border-left: 0;
+}
+.Body .TokenInfo .StrtToken:last-child tr td:last-child{
     border-right: 0;
+}
+
+.Body .TokenInfo .CmtContainer{
+    vertical-align:bottom;
+    text-align:left;
+    width:auto;
+}
+
+.Body .TokenInfo .Cmt {
+    border: 0.05em solid white;
+    border-radius: 10px;
+    white-space:nowrap;
+    width:fit-content;
+    padding: 0 0.5em;
+    background-color: rgba(158, 69, 69, 0.1);
+}
+
+.Body .TokenInfo .TrstInfoContainer {
+    display:inline-block;
+    border: 0.05em solid white;
+    border-radius: 10px;
+    width:fit-content;
+}
+
+.Body .TokenInfo .TrstInfo {
+    border-collapse: collapse;
+    white-space: nowrap;
+    width:auto;
+    display:inline-table;
+    background-color: rgba(158, 69, 69, 0.1);
+}
+
+.Body .TokenInfo .StrtToken b,
+.Body .TokenInfo .TrstInfo b {
+    color:yellow;
+}
+
+.Body .TokenInfo .TrstInfo td{
+    text-align:center;
+    border: 0.001em solid RGB(255,255,255,0.5);
+    padding: 0 0.1em;
+}
+.Body .TokenInfo .TrstInfo tr:first-child td {
+    border-top: 0;
+}
+.Body .TokenInfo .TrstInfo tr td:first-child {
+    border-left: 0;
+}
+.Body .TokenInfo .TrstInfo tr:last-child td {
+    border-bottom: 0;
+}
+.Body .TokenInfo .TrstInfo tr:nth-child(2) td:not(:first-child),
+.Body .TokenInfo .TrstInfo tr:first-child td:not(:first-child){
+    border-top: 0;
+}
+.Body .TokenInfo .TrstInfo tr:nth-child(2) td:not(:first-child),
+.Body .TokenInfo .TrstInfo tr:first-child td:not(:first-child){
+    border-bottom: 0;
+}
+
+.Body .TokenInfo .Indicator {
+    /* text-align:bottom; */
+    /* display:inline-block; */
+    padding-top:0.55em;
 }
 
 @keyframes fade {
