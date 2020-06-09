@@ -87,6 +87,9 @@
     text-align:center;
     border: 0.001em solid RGB(255,255,255,0.5);
     padding: 0 0.1em;
+    max-width:15em;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 .Body .TokenInfo .StrtToken tr:first-child td{
     border-bottom: 0;
@@ -163,7 +166,8 @@
 .Body .TokenInfo .Indicator {
     /* text-align:bottom; */
     /* display:inline-block; */
-    padding-top:0.55em;
+    padding-top:0.50em;
+    width:0.1em;
 }
 
 @keyframes fade {

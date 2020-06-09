@@ -5,7 +5,8 @@ class WdToken extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isActive : false
+            isActive : false,
+            isSelected : false
         }
         this.ref = React.createRef();
         this.tokenInfoRef = React.createRef();
@@ -17,6 +18,7 @@ class WdToken extends Component {
                 <span className="WdToken"
                     onMouseEnter={() => this.setState({isActive:true})}
                     onMouseLeave={() => this.setState({isActive:false})}
+                    onClick={() => this.setState({isSelected:!this.state.isSelected})}
                     ref={this.ref}
                 >
                     {this.props.token}
@@ -31,64 +33,110 @@ class WdToken extends Component {
                 {this.props.isSpace &&
                     <span>&nbsp;</span>
                 }
-                {this.state.isActive &&
+                {(this.state.isActive || this.state.isSelected) &&
                     <div className="TokenInfo">
                         <table>
                             <tbody>
-                                {(this.props.strt !== null) &&
-                                <tr>
-                                    <td>
-                                        <table className="StrtInfo">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        문장구조
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        {this.props.strt.t.split(' ').map((token, idx)=>
-                                                            <table key={idx} className="StrtToken">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colSpan={42}>
-                                                                            {(this.props.strt.valInfo[idx].idxS <= this.props.idx && this.props.strt.valInfo[idx].idxE >= this.props.idx) ?
-                                                                                <b>{token}</b> : <>{token}</>}
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            {this.props.dpList.map((dp, _idx)=>
-                                                                                (this.props.strt.valInfo[idx].idxS <= _idx && this.props.strt.valInfo[idx].idxE >= _idx) &&
-                                                                                <span key={_idx}>
-                                                                                    {this.props.idx === _idx ? 
-                                                                                    <b>{dp}</b> : <>{dp}</>}
-                                                                                    {(this.props.strt.valInfo[idx].idxS < this.props.strt.valInfo[idx].idxE &&
-                                                                                        this.props.strt.valInfo[idx].idxE > _idx) &&
-                                                                                            <>&nbsp;</>}
+                                {(this.props.strt !== null) ?
+                                    <tr>
+                                        <td>
+                                            <table className="StrtInfo">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            문장구조
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            {this.props.strt.t.split(' ').map((token, idx)=>
+                                                                <table key={idx} className="StrtToken">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td colSpan={42}>
+                                                                                {(this.props.strt.valInfo[idx].idxS <= this.props.idx && this.props.strt.valInfo[idx].idxE >= this.props.idx) ?
+                                                                                    <b>{token}</b> : <>{token}</>}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                {this.props.dpList.map((dp, _idx)=>
+                                                                                    (this.props.strt.valInfo[idx].idxS <= _idx && this.props.strt.valInfo[idx].idxE >= _idx) &&
+                                                                                    <span key={_idx}>
+                                                                                        {this.props.idx === _idx ? 
+                                                                                        <b>{dp}</b> : <>{dp}</>}
+                                                                                        {(this.props.strt.valInfo[idx].idxS < this.props.strt.valInfo[idx].idxE &&
+                                                                                            this.props.strt.valInfo[idx].idxE > _idx) &&
+                                                                                                <>&nbsp;</>}
+                                                                                    </span>
+                                                                                )}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td className="Indicator">
+                                            <br></br>
+                                            {this.props.strt.usg !== '' ? <div>=></div> : <div style={{opacity:0}}>=></div>}
+                                            {this.props.strt.cmt !== '' ? <div>=></div> : <div style={{opacity:0}}>=></div>}
+                                        </td>
+                                        <td className="CmtContainer">
+                                            {this.props.strt.usg !== '' ? <div className="Cmt">{this.props.strt.usg}</div> : <div style={{opacity:0}}>blank</div>}
+                                            {this.props.strt.cmt !== '' ? <div className="Cmt">{this.props.strt.cmt}</div> : <div style={{opacity:0}}>blank</div>}
+                                        </td>
+                                    </tr>
+                                :
+                                    <tr  style={{opacity:0}}>
+                                        <td>
+                                            <table className="StrtInfo">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            blank
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            {'blank'.split(' ').map((token, idx)=>
+                                                                <table key={idx} className="StrtToken">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td colSpan={42}>
+                                                                                blank
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span>
+                                                                                    blank
                                                                                 </span>
-                                                                            )}
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td className="Indicator">
-                                        <br></br>
-                                        {this.props.strt.mn && <div>=></div>}
-                                        {this.props.strt.cmt && <div>=></div>}
-                                    </td>
-                                    <td className="CmtContainer">
-                                        {this.props.strt.mn !== '' ? <div className="Cmt">{this.props.strt.mn}</div> : <></>}
-                                        {this.props.strt.cmt !== '' ? <div className="Cmt">{this.props.strt.cmt}</div> : <></>}
-                                    </td>
-                                </tr>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td className="Indicator">
+                                            <br></br>
+                                            blank <br></br>
+                                            blank
+                                        </td>
+                                        <td className="CmtContainer">
+                                            <div className="Cmt">blank</div>
+                                            <div className="Cmt">blank</div>
+                                        </td>
+                                    </tr>
                                 }
+
                                 <tr ref={this.tokenInfoRef}>
                                     <td colSpan={42}>
                                         <div className="TrstInfoContainer">
