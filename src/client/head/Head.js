@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './app.css';
+import './head.css';
 
-export default class Header extends Component {
+export default class Head extends Component {
   componentDidMount() {
 
   }
@@ -9,7 +9,7 @@ export default class Header extends Component {
   render() {
     return (
       <header className="Header">
-        SensebeDictionary
+        meaning.gg
       </header>
     );
   }

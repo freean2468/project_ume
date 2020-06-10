@@ -1,6 +1,7 @@
 import React, { Component } from '../../../node_modules/react';
 import WdToken from './WdToken';
 import './textdisplay.css'
+import ScriptDisplay from './ScriptDisplay';
 
 export default class TextDisplay extends Component {
     constructor(props){
@@ -20,6 +21,8 @@ export default class TextDisplay extends Component {
         fetch('/api/getVideo?id='+this.state.id)
             .then(res => res.json())
             .then(json => this.initiateDisplay(json))
+
+        this.seekTo = props.seekTo.bind(this);
     }
 
     initiateDisplay(json) {
@@ -105,13 +108,18 @@ export default class TextDisplay extends Component {
 
     render() {
         return (
-            <div className="TextDisplay" ref={this.displayRef} 
-                style={{
-                    fontSize:this.state.fontSize,
-                }}>
-                {this.state.playingIndex >= 0 &&
-                    this.state.scrt[this.state.playingIndex].map((token)=>token)} <br/>
-            </div>
+            <>
+                <div className="TextDisplay" ref={this.displayRef} 
+                    style={{
+                        fontSize:this.state.fontSize,
+                    }}>
+                    {this.state.playingIndex >= 0 &&
+                        this.state.scrt[this.state.playingIndex].map((token)=>token)} <br/>
+                </div>
+                {this.state.videoInfo !== null &&
+                    <ScriptDisplay c={this.state.videoInfo.c} seekTo={this.props.seekTo}></ScriptDisplay>
+                }
+            </>
         );
     }
 }

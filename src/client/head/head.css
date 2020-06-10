@@ -1,0 +1,10 @@
+/* Header */
+
+.Header {
+    flex-grow:1;
+    text-align:center;
+    font-size:3vh;
+    font-family: 'Galindo', cursive;
+  }
+  
+  /* Header end */

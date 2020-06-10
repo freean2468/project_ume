@@ -28,17 +28,21 @@ export default class YPlayer extends Component {
 
     this.textDisplayRef = React.createRef();
 
+    this.seekTo = this.seekTo.bind(this);
+
     this.state = {
-      textChild : <TextDisplay id={props.id} ref={this.textDisplayRef}/>,
+      textChild : <TextDisplay id={props.id} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
       seconds : 0,
-      interval : null
+      interval : null,
+      player : null
     }
 
-    this.handleOnPause = this.handleOnPause.bind(this)
-    this.handleOnPlay = this.handleOnPlay.bind(this)
+    this.handleOnPause = this.handleOnPause.bind(this);
+    this.handleOnPlay = this.handleOnPlay.bind(this);
+    this.handleOnReady = this.handleOnReady.bind(this);
 
-    this.textDisplayContainerEl = document.createElement("div")
-    this.textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer')
+    this.textDisplayContainerEl = document.createElement("div");
+    this.textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer');
   }
 
   componentDidMount = () => {
@@ -68,6 +72,10 @@ export default class YPlayer extends Component {
     // clearInterval(this.state.interval);
   }
 
+  seekTo(seconds) {
+    this.state.player.seekTo(seconds);
+  }
+
   render() {
     const opts = {
       height: '1080',
@@ -89,7 +97,7 @@ export default class YPlayer extends Component {
           opts={opts} 
           onPause={this.handleOnPause} 
           onPlay={this.handleOnPlay}
-          ref={this.state.yplaerRef}
+          onReady={this.handleOnReady}
         />
         {ReactDOM.createPortal(
           this.state.textChild,
@@ -99,8 +107,9 @@ export default class YPlayer extends Component {
     );
   }
  
-  _onReady(event) {
+  handleOnReady(event) {
     // access to player in all event handlers via event.target
     event.target.pauseVideo();
+    this.setState({player:event.target});
   }
 }

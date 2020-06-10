@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import './app.css';
+import './nav.css';
 
 class MenuButton extends Component {
   render() {
     return (
-      <button className="RoundButton"
-              onMouseDown={this.props.handleMouseDown}></button>
+      <img className="SearchIcon"
+        src="./public/search.svg" alt="search button" 
+        onMouseEnter={this.props.handleMouseDown}></img>
     );
   }
 }
@@ -20,7 +21,7 @@ class Menu extends Component {
  
     return (
       <div id="flyoutMenu"
-           onMouseDown={this.props.handleMouseDown} 
+           onMouseLeave={this.props.handleMouseDown} 
            className={visibility}>
         <h2><a href="#">Home</a></h2>
         <h2><a href="#">About</a></h2>

@@ -10,20 +10,59 @@ class WdToken extends Component {
         }
         this.ref = React.createRef();
         this.tokenInfoRef = React.createRef();
+
+        this.onClickOutsideHandler = this.onClickOutsideHandler.bind(this);
+        this.onMouseoutOutsideHandler = this.onMouseoutOutsideHandler.bind(this);
+
+        this.onMouseEnterHandler = this.onMouseEnterHandler.bind(this);
+
+        this.onMouseenterOutsideHandler = this.onMouseenterOutsideHandler.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener('click', this.onClickOutsideHandler);
+        window.addEventListener('mouseout', this.onMouseoutOutsideHandler);
+        // window.addEventListener('mouseenter', this.onMouseenterOutsideHandler);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('click', this.onClickOutsideHandler);
+        window.removeEventListener('mouseout', this.onMouseoutOutsideHandler);
+        // window.removeEventListener('mouseenter', this.onMouseenterOutsideHandler);
+    }
+
+    onMouseenterOutsideHandler(e) {
+        console.log('hello');
+    }
+
+    onMouseoutOutsideHandler(e) {
+        if (this.state.isSelected && !this.ref.current.contains(e.target)) {
+            this.setState({ isSelected: false});
+        }
+    }
+
+    onClickOutsideHandler(event) {
+        if (this.state.isSelected && !this.ref.current.contains(event.target)) {
+          this.setState({ isSelected: false });
+        }
+    }
+
+    onMouseEnterHandler(e) {
+        this.setState({isActive:true});
     }
 
     render() {
         return (
             <>
                 <span className="WdToken"
-                    onMouseEnter={() => this.setState({isActive:true})}
+                    onMouseEnter={this.onMouseEnterHandler}
                     onMouseLeave={() => this.setState({isActive:false})}
                     onClick={() => this.setState({isSelected:!this.state.isSelected})}
                     ref={this.ref}
                 >
                     {this.props.token}
                 </span>
-                {this.state.isActive && 
+                {(this.state.isActive || this.state.isSelected) && 
                     <span className="WdToken Active" style={{
                         width: `${this.ref.current.offsetWidth}px`,
                         transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) scale(1.2, 1.8)`
