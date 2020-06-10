@@ -1,7 +1,10 @@
 {
-  "name": "simple-react-full-stack",
-  "version": "1.0.0",
-  "description": "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
+  "name": "meaning.gg",
+  "version": "0.2.5",
+  "description": "Deliverying the meaning of languages.",
+  "engines": {
+    "node": "12.x"
+  },
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --mode production",
