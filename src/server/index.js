@@ -15,6 +15,9 @@ const VIDEO_COLLECTION = "SB_VIDEO"
 
 const PASSWORD = fs.readFileSync("./pw.txt", "utf8")
 
+app.use(express.static("./"));
+app.use(express.static("dist"));
+
 async function getVideo(req, res) {
     const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
