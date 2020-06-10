@@ -1,5 +1,5 @@
 import React, { Component } from '../../../node_modules/react';
-import './WdToken.css';
+import './wdtoken.css';
 
 class WdToken extends Component {
     constructor(props) {
