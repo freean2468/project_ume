@@ -15,8 +15,17 @@ const VIDEO_COLLECTION = "SB_VIDEO"
 
 const PASSWORD = fs.readFileSync("./pw.txt", "utf8")
 
-app.use(express.static("./"));
+var listOfWordJson = JSON.parse(fs.readFileSync("./list_word.json", "utf8"));
+
+var listOfWord = [];
+
+initializeLists();
+
 app.use(express.static("dist"));
+
+function getListOfEnglish(req, res) {
+    res.json({ list:listOfWord })
+}
 
 async function getVideo(req, res) {
     const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`
@@ -43,6 +52,7 @@ async function getVideo(req, res) {
     }
 }
 
+app.get('/api/getListOfEnglish', (req, res) => getListOfEnglish(req, res));
 app.get('/api/getVideo', (req, res) => getVideo(req, res));
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
@@ -62,4 +72,10 @@ async function replaceListing(client, listing, collection) {
     
     // console.log(`${result.matchedCount} document(s) matched the query criteria.`);
     console.log(`_id : ${listing['_id']}, for "${listing["link"]}" replaced : matchedCount(${result.matchedCount}), modiefiedCount(${result.modifiedCount})`);
+}
+
+function initializeLists() {
+    for (let key in listOfWordJson) {
+        listOfWord.push(key);
+    }
 }

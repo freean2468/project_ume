@@ -114,7 +114,7 @@ export default class TextDisplay extends Component {
                         fontSize:this.state.fontSize,
                     }}>
                     {this.state.playingIndex >= 0 &&
-                        this.state.scrt[this.state.playingIndex].map((token)=>token)} <br/>
+                        this.state.scrt[this.state.playingIndex].map((token)=>token)}
                 </div>
                 {this.state.videoInfo !== null &&
                     <ScriptDisplay c={this.state.videoInfo.c} seekTo={this.props.seekTo}></ScriptDisplay>

@@ -1,5 +1,6 @@
 import React, { Component } from '../../../node_modules/react';
 import './scriptdisplay.css'
+import script from '../../../public/script.svg';
 
 export default class ScriptDisplay extends Component {
     constructor(props){
@@ -34,15 +35,18 @@ export default class ScriptDisplay extends Component {
                 <div className={classNameForScriptDisplay}
                     onMouseLeave={this.handleMouseLeave}>
                     {this.props.c.map((c, idx) =>
-                        <div key={idx} className="ScriptToken"
-                            onClick={()=>this.seekTo(c.st)}>
-                            {c.t.scrt}
+                        <div key={idx}>
+                            <div className="ScriptToken"
+                                onClick={()=>this.seekTo(c.st)}>
+                                {c.t.scrt}
+                            </div>
+                            <br></br>
                         </div>)
                     }
                 </div>
                 <div className="ScriptIconContainer">
                     <img className="ScriptIcon" 
-                        src="./public/script.svg" alt="script show button"
+                        src={script} alt="script show button"
                         onMouseEnter={this.handleMouseEnter}
                     ></img>
                 </div>

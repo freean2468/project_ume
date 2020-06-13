@@ -15,24 +15,16 @@ class WdToken extends Component {
         this.onMouseoutOutsideHandler = this.onMouseoutOutsideHandler.bind(this);
 
         this.onMouseEnterHandler = this.onMouseEnterHandler.bind(this);
-
-        this.onMouseenterOutsideHandler = this.onMouseenterOutsideHandler.bind(this);
     }
 
     componentDidMount() {
         window.addEventListener('click', this.onClickOutsideHandler);
         window.addEventListener('mouseout', this.onMouseoutOutsideHandler);
-        // window.addEventListener('mouseenter', this.onMouseenterOutsideHandler);
     }
 
     componentWillUnmount() {
         window.removeEventListener('click', this.onClickOutsideHandler);
         window.removeEventListener('mouseout', this.onMouseoutOutsideHandler);
-        // window.removeEventListener('mouseenter', this.onMouseenterOutsideHandler);
-    }
-
-    onMouseenterOutsideHandler(e) {
-        console.log('hello');
     }
 
     onMouseoutOutsideHandler(e) {
@@ -121,8 +113,8 @@ class WdToken extends Component {
                                         </td>
                                         <td className="Indicator">
                                             <br></br>
-                                            {this.props.strt.usg !== '' ? <div>=></div> : <div style={{opacity:0}}>=></div>}
-                                            {this.props.strt.cmt !== '' ? <div>=></div> : <div style={{opacity:0}}>=></div>}
+                                            {this.props.strt.usg !== '' ? <div>={'>'}</div> : <div style={{opacity:0}}>={'>'}</div>}
+                                            {this.props.strt.cmt !== '' ? <div>={'>'}</div> : <div style={{opacity:0}}>={'>'}</div>}
                                         </td>
                                         <td className="CmtContainer">
                                             {this.props.strt.usg !== '' ? <div className="Cmt">{this.props.strt.usg}</div> : <div style={{opacity:0}}>blank</div>}

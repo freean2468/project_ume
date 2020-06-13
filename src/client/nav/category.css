@@ -1,0 +1,93 @@
+.Nav #flyoutMenu .CategoryButton {
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    width:100%;
+    flex-grow: 1;
+    cursor: pointer;
+    position: relative;
+    padding:
+      calc(var(--space) / 1.125)
+      var(--space)
+      var(--space);
+    border: var(--border-size) solid black;
+    /* color: var(--color-secondary); */
+    background-color: var(--color-primary);
+    font-size: 1.5rem;
+    font-family: var(--font-family);
+    text-transform: lowercase;
+    text-shadow: var(--shadow) 2px 2px;
+    transition: flex-grow var(--duration) var(--ease);
+    white-space: pre-line
+}
+  
+.Nav #flyoutMenu .CategoryButton + .CategoryButton {
+    border-left: var(--border-size) solid black;
+    margin-left: calc(var(--border-size) * -1);
+}
+
+/* .Nav #flyoutMenu .CategoryButton:focus, */
+/* .Nav #flyoutMenu .CategoryButton:hover, */
+.Nav #flyoutMenu .CategoryButton.Active{
+    flex-grow: 2;
+    color: white;
+    outline: none;
+    text-shadow: none;
+    background-color: var(--color-secondary);
+}
+/* 
+.Nav #flyoutMenu .CategoryButton.Focus,
+.Nav #flyoutMenu .CategoryButton:focus {
+    outline: var(--border-size) dashed var(--color-primary);
+    outline-offset: calc(var(--border-size) * -3);
+}
+
+
+.Nav #flyoutMenu:hover .CategoryButton:focus:not(:hover),
+.Nav #flyoutMenu:hover .CategoryButton.NotFocus {
+    flex-grow: 1;
+    color: var(--color-secondary);
+    background-color: var(--color-primary);
+    outline-color: var(--color-tertiary);
+} */
+  
+.Nav #flyoutMenu .CategoryButton:active {
+    transform: translateY(var(--border-size));
+    /* border: var(--big-border-size); */
+}
+
+.Nav .Category {
+    width: 20vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.7);
+    position: fixed;
+    top: 0;
+    left: 10vw;
+    transform : translate(-10vw, 0) scale(0, 1);
+    transition: transform .3s
+                cubic-bezier(0, .52, 0, 1);
+    z-index: 1001;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: var(--shadow) 4px 4px;
+}
+
+.Nav .Category.Active {
+    transform: translate(0, 0) scale(1, 1);
+    background-color: var(--color-secondary);
+    overflow: scroll;
+}
+
+.Nav .Category .List {
+    color : rgba(255, 255, 255, 1);
+    font-size: 1.5em;
+    border:1px solid black;
+    border-right:0px;
+    border-left:0px;
+    width:100%;
+    height:2em;
+    text-align:center;
+}

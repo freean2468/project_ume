@@ -1,9 +1,21 @@
+:root {
+    --border-size: 0.125rem;
+    --big-border-size: 1.25rem;
+    --duration: 250ms;
+    --ease: cubic-bezier(0.215, 0.61, 0.355, 1);
+    --font-family: monospace;
+    --color-primary: rgba(24, 24, 24, 0.9);
+    --color-secondary: rgb(46, 46, 46);
+    --color-tertiary: dodgerblue;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --space: 1rem;
+}
 
 .Nav {
     flex-grow:0;
 }
   
-.Menu {
+.Nav .Menu {
     position: fixed;
     left: 0;
     top: 0;
@@ -13,61 +25,34 @@
     height: 100vh;
 }       
 
-.RoundButton {
-    background-color: #96D9FF;
-    margin-bottom: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 10px solid #0065A6;
-    outline: none;
-    transition: all .2s cubic-bezier(0, 1.26, .8, 1.28);
-}
-
-.RoundButton:hover {
-    background-color: #96D9FF;
-    cursor: pointer;
-    border-color: #003557;
-    transform: scale(1.2, 1.2);
-}
-
-.RoundButton:active {
-    border-color: #003557;
-    background-color: #FFF;
-}
-
-#flyoutMenu {
+.Nav #flyoutMenu {
     width: 10vw;
     height: 100vh;
-    background-color: #FFE600;
+    background-color: rgba(255,255,255,0);
     position: fixed;
     top: 0;
     left: 0;
     transition: transform .3s
                 cubic-bezier(0, .52, 0, 1);
-    overflow: scroll;
+    overflow: visible;
     z-index: 1000;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: var(--shadow) 4px 4px;
 }
 
-#flyoutMenu.hide {
+.Nav #flyoutMenu.hide {
     transform: translate3d(-11vw, 0, 0);
 }
 
-#flyoutMenu.show {
-    transform: translate3d(0vw, 0, 0);
+.Nav #flyoutMenu.show {
+    transform: translate3d(0, 0, 0);
     overflow: hidden;
 }
 
-#flyoutMenu h2 a {
-    color: #333;
-    margin-left: 15px;
-    text-decoration: none;
-}
-
-#flyoutMenu h2 a:hover {
-    text-decoration: underline;
-}
-  
 .Nav .SearchIcon {
     width:3em;
     filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
