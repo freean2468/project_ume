@@ -57,7 +57,9 @@ class WdToken extends Component {
                 {(this.state.isActive || this.state.isSelected) && 
                     <span className="WdToken Active" style={{
                         width: `${this.ref.current.offsetWidth}px`,
-                        transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) scale(1.2, 1.8)`
+                        transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) 
+                                translateY(${this.ref.current.offsetHeight*20/100}px)
+                                scale(1.2, 1.8)`
                     }}>
                     </span>
                 }

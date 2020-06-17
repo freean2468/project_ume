@@ -15,6 +15,7 @@ export default class TextDisplay extends Component {
             playingIndex : -1,
             seconds : 0,
             scrt : [[]],
+            cv : [],
             fontSize : 0
         }
 
@@ -32,8 +33,10 @@ export default class TextDisplay extends Component {
 
         for (let i = 0; i < c.length; ++i) {
             let stc = c[i].t.stc;
-            
+            let cv = c[i].cv;
+
             this.state.scrt[i] = [];
+            this.state.cv.push(cv);
             for (let j = 0; j < stc.length; ++j) {
                 let ct = stc[j].ct,
                     pp = stc[j].pp,
@@ -99,19 +102,35 @@ export default class TextDisplay extends Component {
                     break;
                 }
             }
+            let fs = 0;
+            if (this.state.cv !== [] && this.state.playingIndex >= 0) {
+                fs = this.state.cv[playingIndex].fs;
+            }
+                
             this.setState({
                 playingIndex:playingIndex,
-                fontSize:39.9*this.displayRef.current.offsetWidth/1920*0.5625
+                fontSize:fs*this.displayRef.current.offsetWidth/1920*0.5625
             });
         }
     }
 
     render() {
+        let pt=0, pl=0, pr=0, ff='';
+        if (this.state.playingIndex >= 0) {
+            pt = this.state.cv[this.state.playingIndex].pt;
+            pl = this.state.cv[this.state.playingIndex].pl;
+            pr = this.state.cv[this.state.playingIndex].pr;
+            ff = this.state.cv[this.state.playingIndex].ff;
+        }
         return (
             <>
                 <div className="TextDisplay" ref={this.displayRef} 
                     style={{
-                        fontSize:this.state.fontSize,
+                        fontSize:`${this.state.fontSize}px`,
+                        paddingTop:`${pt}%`,
+                        paddingLeft:`${pl}%`,
+                        paddingRight:`${pr}%`,
+                        fontFamily:`${ff}`
                     }}>
                     {this.state.playingIndex >= 0 &&
                         this.state.scrt[this.state.playingIndex].map((token)=>token)}
