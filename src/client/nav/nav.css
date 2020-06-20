@@ -25,10 +25,14 @@
     height: 100vh;
 }       
 
+.Nav .MenuContainer {
+    height:100%;
+}
+
 .Nav #flyoutMenu {
-    width: 10vw;
-    height: 100vh;
-    background-color: rgba(255,255,255,0);
+    width: 30vw;
+    height: fit-content;
+    background-color: rgba(255,255,255,0.5);
     position: fixed;
     top: 0;
     left: 0;
@@ -38,19 +42,84 @@
     z-index: 1000;
     display:flex;
     flex-direction:column;
-    justify-content: center;
-    align-items: center;
 
-    box-shadow: var(--shadow) 4px 4px;
+    /* box-shadow: var(--shadow) 4px 4px; */
 }
 
 .Nav #flyoutMenu.hide {
-    transform: translate3d(-11vw, 0, 0);
+    transform: translate3d(-31vw, 0, 0);
 }
 
 .Nav #flyoutMenu.show {
     transform: translate3d(0, 0, 0);
+}
+
+.Nav .Request {
+    width:100%;
+    background-color:red;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    flex-grow:1;
+    justify-content: center;
+    align-items: center;
+}
+
+.Nav .Request .Options {
+    display : flex;
+    flex-grow : 1;
+}
+
+.Nav .Request .Search {
+    display : flex;
+    flex-grow : 2;
+}
+
+.Nav .Response {
+    height:100vh;
+    width:100%;
+    flex-grow : 1;
+    overflow-y:scroll;
+    /* background-color:blue; */
+}
+
+.Nav .Response .ResLeft {
+    position:absolute;
+    left:0;
+    display:flex;
+    flex-direction:column;
+    overflow-y:scroll;
+}
+
+.Nav .Response .ResLeft .ResLeftItem {
+    height:2em;
+    background-color:grey;
+    border-top:1px solid black;
+    border-bottom:1px solid black;
     overflow: hidden;
+}
+
+.Nav .Response .ResRight {
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    background-color:blue;
+    overflow-y:scroll;
+}
+
+.Nav .Response .ResRight .ResRightItem {
+    background-color:blue;
+    border-top:1px solid white;
+    border-bottom:1px solid white;
+    overflow-x: hidden;
+    overflow-y:scroll;
+    padding:0 2px;
+}
+
+.Nav .Response .ResRight .ResRightItem img{
+    max-width:100%;
+    max-height:100%;
+    display:block;
 }
 
 .Nav .SearchIcon {
