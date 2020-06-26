@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8090;
 const DATABASE_NAME = "sensebe_dictionary";
 const VIDEO_ARCHIVE_PATH = "collections/SB_VIDEO"
 const VIDEO_COLLECTION = "SB_VIDEO";
-const WORD_COLLECTION = "SB_WORD";
+const WORD_COLLECTION = "SB_ENG_BASE";
 
 const PASSWORD = fs.readFileSync("./pw.txt", "utf8")
 
@@ -23,14 +23,20 @@ var listWordJson = JSON.parse(fs.readFileSync(LIST_WORD, "utf8"));
 app.use(express.static("dist"));
 
 function preSearch(req, res) {
+    const splitAt = index => x => [x.slice(0, index), x.slice(index)]
     const query = req.query;
-    const option = query.option;
     const search = query.search;
     let result = {}
 
     // gotta change the algorithm later
-    switch(option) {
-        case '0': // Eng
+    switch(search[0]) {
+        case '@': // Kor
+            const aSearch = splitAt(1)(search);
+            break;
+        case '$': // Game titles
+            const bSearch = splitAt(1)(search);
+            break;
+        default: // Eng
             for (let key in listWordJson) {
                 if (key.includes(search)) {
                     result[key] = listWordJson[key]    
@@ -39,12 +45,6 @@ function preSearch(req, res) {
                     break;
                 }
             }
-            break;
-        case '1': // Kor
-
-            break;
-        case '2': // game
-
             break;
     }
 
@@ -84,14 +84,15 @@ async function search(req, res) {
         await client.connect();
         
         const result = await client.db(DATABASE_NAME).collection(WORD_COLLECTION).findOne({ _id: parseInt(id) });
-
+        
         if (result) {
+            delete result._id;
             return res.json(result)
         } else {
-            throw result
+            throw "[Search] something wrong"
         }
     } catch (e) {
-        console.error(e)
+        console.error(e.stack)
         res.json({res:e})
     } finally {
         await client.close()

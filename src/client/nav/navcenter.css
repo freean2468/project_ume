@@ -1,0 +1,107 @@
+.NavCenter {
+    max-width:550px;
+    flex:1 100%;
+    margin:auto;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.NavCenter .SearchBar {
+    position:relative;
+    float:right;
+    width:100%;
+    max-width:550px;
+}
+
+.NavCenter .SearchBar .SearchForm {
+    width:100%;
+}
+
+.NavCenter .SearchForm .SearchIcon {
+    position: absolute;
+    width:1.5em;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background: transparent;
+    color: #fff;
+    border: 0;
+    outline: 0 none;
+    padding: 2px;
+    margin : 8px;
+    cursor: pointer;
+    filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
+}
+
+.NavCenter .SearchBar .Search {
+    background: hsla(0,0%,100%,.25);
+    border: 1px solid transparent;
+    padding: 8px 5px 8px 10px;
+    border-radius: 3px;
+    width: 100%;
+    outline: 0 none;
+    min-height: 24px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    color: #fff;
+    text-shadow: inherit;
+    -webkit-text-fill-color: inherit;
+}
+
+.NavCenter .SearchBar .Suggestion {
+    position: absolute;
+    width: inherit;
+    color: #b5b9c2;
+    font-size: 17px;
+    line-height: 2.24;
+    letter-spacing: .9px;
+    padding: 8px 8px 27px;
+    border-radius: 4px;
+    background-color: #3c424b;
+    box-shadow: 0 22px 40px 0 rgba(0,0,0,.25);
+    margin-top: 11px;
+    min-width: 380px;
+    text-align: left;
+    border: 1px solid #4f4f4f;
+    z-index: 1001;
+}
+
+.NavCenter .Suggestion b {
+    color:white;
+}
+
+.NavCenter .SuggestionList .SuggestionItem {
+    cursor: pointer;
+    padding-left: 8px;
+}
+
+.NavCenter .SuggestionList .SuggestionItem:hover {
+    background-color: #5a5a5a;
+}
+
+
+
+.Nav .NavCenter .Response .ResRight {
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    background-color:blue;
+    overflow-y:scroll;
+}
+
+.Nav .NavCenter .Response .ResRight .ResRightItem {
+    background-color:blue;
+    border-top:1px solid white;
+    border-bottom:1px solid white;
+    overflow-x: hidden;
+    overflow-y:scroll;
+    padding:0 2px;
+}
+
+.Nav .NavCenter .Response .ResRight .ResRightItem img{
+    max-width:100%;
+    max-height:100%;
+    display:block;
+}

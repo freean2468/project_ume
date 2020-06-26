@@ -1,0 +1,45 @@
+.Channel {
+    text-align:left;
+    width:100%;
+    /* margin:0 0; */
+    /* padding:10px; */
+    z-index:1000;
+}
+
+.Channel p {
+    text-align:center;
+    font-size:22px;
+    font-family: 'Jua', sans-serif;
+}
+
+.Channel .ResultsContainer {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+}
+
+.Channel .Words,
+.Channel .Usages {
+    flex:1 50%;
+    border:1px solid #bebebe;
+    border-radius:5px;
+    margin:5px 5px;
+}
+
+.Channel .Words .ChannelCard,
+.Channel .Usages .ChannelCard {
+    display:inline-block;
+    text-align:center;
+    top:0;
+    background-color:#8d8d8d;
+    border:1px solid #bebebe;
+    white-space: pre-wrap;
+    padding: 5px 5px 5px 10px;
+    margin: 5px 5px;
+    border-radius:4px;
+
+    font-family: 'Jua', sans-serif;
+    font-size: 18px;
+    letter-spacing: .4px;
+    cursor: pointer;
+}

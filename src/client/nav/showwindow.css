@@ -1,0 +1,41 @@
+.ShowWindow {
+    width:100%;
+    padding:10px;
+    margin:0;
+}
+
+.ShowWindow p {
+    text-align:center;
+    font-size:22px;
+    font-family: 'Jua', sans-serif;
+}
+
+.ShowWindow .ChannelCard {
+    display:inline-block;
+    width:120px;
+    top:0;
+    background-color:#585858;
+    box-shadow: 0 2px 2px 0 rgba(255,255,255,.4);
+    white-space: pre-wrap;
+    /* padding: 5px 5px 5px 5px; */
+    /* margin: 5px 5px; */
+    border-radius:4px;
+
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    font-weight:500;
+    letter-spacing: .4px;
+    cursor: pointer;
+}
+
+.ShowWindow .ChannelCard .Source {
+    width:100%;
+    padding: auto auto;
+    text-align:center;
+    background-color:#3d3d3d;
+}
+
+.ShowWindow .ChannelCard .Stc {
+    text-align:left;
+    padding: 5px 5px;
+}
