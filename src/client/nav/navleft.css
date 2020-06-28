@@ -1,6 +1,10 @@
-.Nav .NavLeft {
+.NavLeft {
     min-width:290px;
     text-align:left;
     font-size:3vh;
     font-family: 'Galindo', cursive;
+}
+
+.NavLeft .Title {
+    cursor:pointer;
 }

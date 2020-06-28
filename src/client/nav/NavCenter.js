@@ -37,6 +37,8 @@ export default class NavCenter extends Component {
         this.handleOnMouseLeaveMenu = this.handleOnMouseLeaveMenu.bind(this);
         this.handleOnClickRes = this.handleOnClickRes.bind(this);
         this.onClickOutsideHandler = this.onClickOutsideHandler.bind(this);
+
+        this.setSearch = this.setSearch.bind(this);
     }
 
     componentDidMount() {
@@ -45,6 +47,15 @@ export default class NavCenter extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('click', this.onClickOutsideHandler);
+    }
+
+    setSearch(value) {
+      if (value === ''){
+        this.setState({searchRes:{},search:''});
+        this.props.setChannel(null);
+      } else {
+        this.setState({search:value});
+      }
     }
 
     onClickOutsideHandler(event) {
@@ -74,9 +85,8 @@ export default class NavCenter extends Component {
     handleOnChange(value) {
         if (value === ''){
           this.setState({searchRes:{},search:''});
-        }
-        
-        if (value !== '') {
+          this.props.setChannel(null);
+        } else if (value !== '') {
           const filter = /^['a-zA-Z-/$/@]+$/;
     
           if (filter.test(value[0])) {
@@ -119,54 +129,6 @@ export default class NavCenter extends Component {
                                 {BoldedText(key, this.state.search)}
                             </div>)
                         }
-                        {/* <div className="ResRight" 
-                            style={{
-                                top:`${this.props.height}px`,
-                            }}
-                        >
-                            {this.state.res !== null &&
-                            <>
-                                <p>
-                                    {this.state.selectedRt} 검색 결과 :
-                                </p>
-                                <div>
-                                <p>단어({this.state.res.wd_m.length})</p>
-                                {
-                                    this.state.res.wd_m.map((wd, idx) =>
-                                    <div className="ResRightItem" key={idx} onClick={(e)=>console.log(wd)}>
-                                        <p>직역 : {wd.lt}</p>
-                                        {wd.lk.map((link, idx) =>
-                                        <div key={idx}>
-                                            <p>&#60; {sourceList.source[link.source]} &#62;</p>
-                                            <p>{link.stc}</p>
-                                            <img src={`https://img.youtube.com/vi/${link.link}/1.jpg`}/>
-                                        </div>
-                                        )}
-                                    </div>
-                                    )
-                                }
-                                </div>
-                                <div>
-                                <p>용법({this.state.res.strt_m.length})</p>
-                                {
-                                    this.state.res.strt_m.map((strt, idx) =>
-                                    <div className="ResRightItem" key={idx} onClick={(e)=>console.log(strt)}>
-                                        <p>용법:{strt.t}</p>
-                                        <p>{strt.usg}</p>
-                                        {strt.lk.map((link, idx) =>
-                                        <div key={idx}>
-                                            <p>&#60; {sourceList.source[link.source]} &#62;</p>
-                                            <p>{link.stc}</p>
-                                            <img src={`https://img.youtube.com/vi/${link.link}/1.jpg`}/>
-                                        </div>
-                                        )}
-                                    </div>
-                                    )
-                                }
-                                </div>
-                            </>
-                            }
-                        </div> */}
                     </div>
                 </div>
             </div>

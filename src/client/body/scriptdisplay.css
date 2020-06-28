@@ -43,15 +43,15 @@
 
 .Body .ScriptIconContainer {
     position:absolute;
+    width:3.5%;
+    left:0%;
+    top:15%;
+    /* left:95.8%; */
 }
 
 .Body .ScriptIcon{
-    position:fixed;
-    width:3.5%;
-    top:0;
-    right:0;
-    top:5%;
-    left:95.8%;
+    position:relative;
+    width:3em;
     filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
     cursor:pointer;
     pointer-events:auto;

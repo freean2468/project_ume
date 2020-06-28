@@ -12,6 +12,7 @@ export default class Channel extends Component {
         }
 
         this.handlerOnClickCard = this.handlerOnClickCard.bind(this);
+        this.setLink = props.setLink.bind(this);
     }
 
     handlerOnClickCard(e, info, indicator) {
@@ -56,7 +57,9 @@ export default class Channel extends Component {
                 }
             </div>
             {this.props.channel !== null &&
-                <ShowWindow indicator={this.state.indicator} rt={this.props.channel.rt} info={this.state.info} />
+                <ShowWindow indicator={this.state.indicator} rt={this.props.channel.rt} info={this.state.info} 
+                    setLink={this.setLink}
+                />
             }
         </>
       );  

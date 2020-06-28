@@ -31,7 +31,7 @@ export default class YPlayer extends Component {
     this.seekTo = this.seekTo.bind(this);
 
     this.state = {
-      textChild : <TextDisplay id={props.id} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
+      textChild : <TextDisplay id={props.link.link} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
       seconds : 0,
       interval : null,
       player : null
@@ -46,12 +46,12 @@ export default class YPlayer extends Component {
   }
 
   componentDidMount = () => {
-    const container = document.getElementsByClassName(this.props.container)[this.props.idx];
+    const container = document.getElementsByClassName(this.props.container)[0];
     container.appendChild(this.textDisplayContainerEl);
   };
   
   componentWillUnmount = () => {
-    const container = document.getElementsByClassName(this.props.container)[this.props.idx];
+    const container = document.getElementsByClassName(this.props.container)[0];
     container.removeChild(this.textDisplayContainerEl);
     clearInterval(this.state.interval);
   };
@@ -81,9 +81,7 @@ export default class YPlayer extends Component {
       height: '1080',
       width: '1920',
       playerVars: {
-        // https://developers.google.com/youtube/player_parameters
         autoplay: 0,
-        // origin: 'http://localhost:'+configs.port,
         rel: 0,
         fs:0
       },
@@ -93,7 +91,7 @@ export default class YPlayer extends Component {
       <>
         <YouTube containerClassName={this.props.container} 
           className={this.props.class} 
-          videoId={this.props.link} 
+          videoId={this.props.link.link} 
           opts={opts} 
           onPause={this.handleOnPause} 
           onPlay={this.handleOnPlay}

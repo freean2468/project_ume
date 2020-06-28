@@ -13,11 +13,18 @@ export default class Nav extends Component {
       channel:null
     };
 
+    this.centerRef = React.createRef();
+
     this.setChannel = this.setChannel.bind(this);
+    this.toHome = this.toHome.bind(this);
+    this.setLink = props.setLink.bind(this);
+  }
+
+  toHome() {
+    this.centerRef.current.setSearch('');
   }
 
   setChannel(o) {
-    console.log(o);
     this.setState({ channel:o });
   }
 
@@ -25,11 +32,11 @@ export default class Nav extends Component {
     return (
       <div className="NavContainer">
         <div className="Nav">
-          <NavLeft/>
-          <NavCenter setChannel={this.setChannel}/>
+          <NavLeft setLink={this.setLink} setChannel={this.setChannel} toHome={this.toHome}/>
+          <NavCenter setChannel={this.setChannel} ref={this.centerRef}/>
           <NavRight/>
         </div>
-        <Channel channel={this.state.channel}/>
+        <Channel setLink={this.setLink} channel={this.state.channel}/>
       </div>
     );
   }

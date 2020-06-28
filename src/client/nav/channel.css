@@ -31,7 +31,8 @@
     display:inline-block;
     text-align:center;
     top:0;
-    background-color:#8d8d8d;
+    background-color:#3a3a3a;
+    box-shadow: 0 0px 5px 0 rgba(255,255,255,.4);
     border:1px solid #bebebe;
     white-space: pre-wrap;
     padding: 5px 5px 5px 10px;
@@ -42,4 +43,9 @@
     font-size: 18px;
     letter-spacing: .4px;
     cursor: pointer;
+}
+
+.Channel .Words .ChannelCard:hover,
+.Channel .Usages .ChannelCard:hover {
+    background-color:#525252;
 }

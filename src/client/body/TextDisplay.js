@@ -103,7 +103,7 @@ export default class TextDisplay extends Component {
                 }
             }
             let fs = 0;
-            if (this.state.cv !== [] && this.state.playingIndex >= 0) {
+            if (this.state.cv !== [] && playingIndex >= 0) {
                 fs = this.state.cv[playingIndex].fs;
             }
                 
