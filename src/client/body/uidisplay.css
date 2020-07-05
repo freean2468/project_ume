@@ -1,0 +1,109 @@
+.UIDisplay {
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    text-align: left;
+}
+
+.UIDisplay .ScriptDisplay {
+    /* width:90%;
+    height:fit-content; */
+
+	position: absolute;
+	background: rgba(0,0,0,0.5);
+    border-radius: .4em;
+    top:50%;
+    left:50%;
+    
+    transform: translate3d(-50%, -50%, 0) scale(0, 0);
+    pointer-events:auto;
+    transition: transform .3s
+                cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    overflow: hidden;
+    z-index:1;
+
+    font-size : 1.5em;
+    padding : 4em 4em;
+
+    padding-left: -1em;
+    text-indent: 1em;
+    text-align:left;
+}
+
+.UIDisplay .ScriptDisplay:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 4%;
+	width: 0;
+	height: 0;
+	border: 26px solid transparent;
+	border-left-color: #00aabb;
+	border-right: 0;
+	margin-top: -26px;
+	margin-right: -26px;
+}
+
+.UIDisplay .ScriptDisplay.Active {
+    transform: translate3d(-50%, -50%, 0) scale(1, 1);
+}
+
+.UIDisplay .ScriptDisplay .ScriptToken {
+    border:1px white solid;
+    transition : transform .3s cubic-bezier(1, 0, 0, 1);
+    cursor:pointer;
+}
+
+.UIDisplay .ScriptDisplay .ScriptToken:hover {
+    transform : scale(1.05, 1.05);
+}
+
+.UIDisplay .UIContainer {
+    position:relative;
+    padding-top:65px;
+}
+
+.UIDisplay .UIContainer table{
+    max-width:5%;
+}
+
+.UIDisplay .UIContainer td{
+    max-width:50px;
+    max-height:50px;
+    width:100%;
+    height:0%;
+    text-align:center; 
+    vertical-align:middle;
+}
+
+.UIDisplay .UIContainer .AutoIcon{
+    position:relative;
+    width:80%;
+    filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
+    cursor:pointer;
+    pointer-events:auto;
+}
+
+.UIDisplay .UIContainer .AutoIcon.Inactive{
+    opacity:0.5;
+}
+
+.UIDisplay .UIContainer .AutoIcon:hover{
+    transform : scale(1.2, 1.2);
+    transition : transform .3s cubic-bezier(1, 0, 0, 1);
+}
+
+.UIDisplay .UIContainer .ScriptIcon{
+    position:relative;
+    width:100%;
+    filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
+    cursor:pointer;
+    pointer-events:auto;
+}
+
+.UIDisplay .UIContainer .ScriptIcon:hover{
+    transform : scale(1.2, 1.2);
+    transition : transform .3s cubic-bezier(1, 0, 0, 1);
+}

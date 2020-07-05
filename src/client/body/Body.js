@@ -12,7 +12,9 @@ export default class Body extends Component {
     return (
       <div className="Body">
         {this.props.link !== null ?
-          <YPlayer link={this.props.link} container="IframeContainer" class="Iframe"/>
+          <div className="VideoPlayer">
+            <YPlayer link={this.props.link} container="IframeContainer" class="Iframe"/>
+          </div>
           :
           <div className="Home">
             <div>

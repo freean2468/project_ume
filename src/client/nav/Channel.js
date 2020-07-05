@@ -52,6 +52,7 @@ export default class Channel extends Component {
                                     </span>
                                 )}
                             </div>
+                            <div className="Dp02"></div>
                         </div>
                     </>
                 }

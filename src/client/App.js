@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Nav from './nav/Nav.js';
-import Body from './body/Body.js';
+import Nav from './nav/Nav';
+import Body from './body/Body';
+import Footer from './footer/Footer';
 import './app.css';
 
 export default class App extends Component {
@@ -20,10 +21,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <>
+      <div className="AppContainer">
         <Nav setLink={this.setLink}/>
         <Body link={this.state.link}/>
-      </>
+        <Footer />
+      </div>
     );
   }
 }

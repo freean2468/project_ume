@@ -83,7 +83,9 @@ export default class YPlayer extends Component {
       playerVars: {
         autoplay: 0,
         rel: 0,
-        fs:0
+        fs:0,
+        controls:1,
+        modestbranding:1
       },
     };
 

@@ -4,57 +4,44 @@ import './wdtoken.css';
 class WdToken extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            isActive : false,
-            isSelected : false
-        }
+
         this.ref = React.createRef();
         this.tokenInfoRef = React.createRef();
 
         this.onClickOutsideHandler = this.onClickOutsideHandler.bind(this);
-        this.onMouseoutOutsideHandler = this.onMouseoutOutsideHandler.bind(this);
 
-        this.onMouseEnterHandler = this.onMouseEnterHandler.bind(this);
+        this.setPreSelectedIdx = props.setPreSelectedIdx.bind(this);
+        this.setSelectedIdx = props.setSelectedIdx.bind(this);
     }
 
     componentDidMount() {
         window.addEventListener('click', this.onClickOutsideHandler);
-        window.addEventListener('mouseout', this.onMouseoutOutsideHandler);
     }
 
     componentWillUnmount() {
         window.removeEventListener('click', this.onClickOutsideHandler);
-        window.removeEventListener('mouseout', this.onMouseoutOutsideHandler);
-    }
-
-    onMouseoutOutsideHandler(e) {
-        if (this.state.isSelected && !this.ref.current.contains(e.target)) {
-            this.setState({ isSelected: false});
-        }
     }
 
     onClickOutsideHandler(event) {
-        if (this.state.isSelected && !this.ref.current.contains(event.target)) {
-          this.setState({ isSelected: false });
+        if (this.props.selectedIdx === this.props.abIdx && !this.ref.current.contains(event.target)) {
+            this.setSelectedIdx(null)
         }
-    }
-
-    onMouseEnterHandler(e) {
-        this.setState({isActive:true});
     }
 
     render() {
         return (
             <>
                 <span className="WdToken"
-                    onMouseEnter={this.onMouseEnterHandler}
-                    onMouseLeave={() => this.setState({isActive:false})}
-                    onClick={() => this.setState({isSelected:!this.state.isSelected})}
+                    onMouseEnter={()=>this.setPreSelectedIdx(this.props.abIdx)}
+                    onMouseLeave={() => this.setPreSelectedIdx(null) }
+                    onClick={() => this.setSelectedIdx(this.props.abIdx) }
                     ref={this.ref}
                 >
                     {this.props.token}
                 </span>
-                {(this.state.isActive || this.state.isSelected) && 
+                {this.ref.current !== null && ((this.props.selectedIdx === null && this.props.preSelectedIdx === this.props.abIdx)
+                || (this.props.selectedIdx === null && this.props.preSelectedIdx === null && this.props.autoIdx === this.props.abIdx)
+                || (this.props.selectedIdx === this.props.abIdx )) && 
                     <span className="WdToken Active" style={{
                         width: `${this.ref.current.offsetWidth}px`,
                         transform:`translateX(-${this.ref.current.offsetWidth*98/100}px) 
@@ -66,7 +53,9 @@ class WdToken extends Component {
                 {this.props.isSpace &&
                     <span>&nbsp;</span>
                 }
-                {(this.state.isActive || this.state.isSelected) &&
+                {((this.props.selectedIdx === null && this.props.preSelectedIdx === this.props.abIdx)
+                || (this.props.selectedIdx === null && this.props.preSelectedIdx === null && this.props.autoIdx === this.props.abIdx)
+                || (this.props.selectedIdx === this.props.abIdx )) &&
                     <div className="TokenInfo">
                         <table>
                             <tbody>
@@ -87,7 +76,7 @@ class WdToken extends Component {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td colSpan={42}>
-                                                                                {(this.props.strt.valInfo[idx].idxS <= this.props.idx && this.props.strt.valInfo[idx].idxE >= this.props.idx) ?
+                                                                                {(this.props.strt.valInfo[idx].idxS <= this.props.idxInStc && this.props.strt.valInfo[idx].idxE >= this.props.idxInStc) ?
                                                                                     <b>{token}</b> : <>{token}</>}
                                                                             </td>
                                                                         </tr>
@@ -96,7 +85,7 @@ class WdToken extends Component {
                                                                                 {this.props.dpList.map((dp, _idx)=>
                                                                                     (this.props.strt.valInfo[idx].idxS <= _idx && this.props.strt.valInfo[idx].idxE >= _idx) &&
                                                                                     <span key={_idx}>
-                                                                                        {this.props.idx === _idx ? 
+                                                                                        {this.props.idxInStc === _idx ? 
                                                                                         <b>{dp}</b> : <>{dp}</>}
                                                                                         {(this.props.strt.valInfo[idx].idxS < this.props.strt.valInfo[idx].idxE &&
                                                                                             this.props.strt.valInfo[idx].idxE > _idx) &&
@@ -183,7 +172,7 @@ class WdToken extends Component {
                                                             this.props.dpList.map((dp, idx)=>
                                                                 <td key={idx}>
                                                                     {
-                                                                        this.props.idx === idx ?
+                                                                        this.props.idxInStc === idx ?
                                                                             <b>{dp}</b> : dp
                                                                     }
                                                                 </td>
@@ -198,7 +187,7 @@ class WdToken extends Component {
                                                             this.props.ltList.map((lt, idx)=>
                                                                 <td key={idx}>
                                                                     {
-                                                                        this.props.idx === idx ?
+                                                                        this.props.idxInStc === idx ?
                                                                             <b>{lt}</b> : lt
                                                                     }
                                                                 </td>

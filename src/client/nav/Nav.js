@@ -30,14 +30,17 @@ export default class Nav extends Component {
 
   render() {
     return (
-      <div className="NavContainer">
-        <div className="Nav">
-          <NavLeft setLink={this.setLink} setChannel={this.setChannel} toHome={this.toHome}/>
-          <NavCenter setChannel={this.setChannel} ref={this.centerRef}/>
-          <NavRight/>
+      <>
+        <div className="NavContainer">
+          <div className="Nav">
+            <NavLeft setLink={this.setLink} setChannel={this.setChannel} toHome={this.toHome}/>
+            <NavCenter setChannel={this.setChannel} ref={this.centerRef}/>
+            <NavRight/>
+            <div className="Dp03"></div>
+          </div>
+          <Channel setLink={this.setLink} channel={this.state.channel}/>
         </div>
-        <Channel setLink={this.setLink} channel={this.state.channel}/>
-      </div>
+      </>
     );
   }
 }

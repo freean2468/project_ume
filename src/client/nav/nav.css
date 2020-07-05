@@ -11,12 +11,19 @@
     --space: 1rem;
 }
 
-.Nav {
+.NavContainer {
+    position:relative;
+    z-index:1000;
+    flex-shrink: 0;
+    box-shadow:inset 0px -1px 1px rgba(125,125,125, 0.2);
+}
+
+.NavContainer .Nav {
+    position:relative;
     padding:10px;
     top:0px;
     /* width:100%; */
     text-align:center;
     margin:0 auto;
     display:flex;
-    z-index:1000;
 }
