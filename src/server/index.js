@@ -41,6 +41,7 @@ function preSearch(req, res) {
                 if (key.includes(search)) {
                     result[key] = listWordJson[key]    
                 }
+                // limit up to 10.
                 if (Object.keys(result).length >= 10) {
                     break;
                 }
@@ -123,9 +124,80 @@ async function getVideo(req, res) {
     }
 }
 
+async function getWdChunkInVideo(req, res) {
+    const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`;
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const query = req.query;
+    const vid = query.vid, c = query.c.trim(), stc = query.stc, wd = query.wd;
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect()
+        
+        const result = await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).findOne({ 
+            _id: vid
+        });
+            
+        if (result) {
+            return res.json({
+                source: result.source,
+                stc: result.c[c].t.stc[stc].ct,
+                st: result.c[c].t.stc[stc].wd[wd].st,
+                ib: result.c[c].t.stc[stc].wd[wd].ib
+            });
+        } else {
+            throw new Error('error occured!');
+        }
+    } catch (e) {
+        console.error(e.stack)
+        res.json({res:e})
+    } finally {
+        await client.close()
+    }
+};
+
+async function getStrtChunkInVideo(req, res) {
+    const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`;
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const query = req.query;
+    const vid = query.vid, c = query.c.trim(), stc = query.stc, strt = query.strt;
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect()
+        
+        const result = await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).findOne({ 
+            _id: vid
+        });
+            
+        if (result) {
+            return res.json({
+                source: result.source,
+                stc: result.c[c].t.stc[stc].ct,
+                st: result.c[c].t.stc[stc].wd[result.c[c].t.stc[stc].strt[strt].from].st,
+                ib: result.c[c].t.stc[stc].wd[result.c[c].t.stc[stc].strt[strt].from].ib,
+                t: result.c[c].t.stc[stc].strt[strt].t,
+                usg: result.c[c].t.stc[stc].strt[strt].usg
+            });
+        } else {
+            throw new Error('error occured!');
+        }
+    } catch (e) {
+        console.error(e.stack);
+        res.json({res:e})
+    } finally {
+        await client.close()
+    }
+};
+
+// file 
 app.get('/api/preSearch', (req, res) => preSearch(req, res));
+
+// DB find
 app.get('/api/search', (req, res) => search(req, res));
 app.get('/api/getVideo', (req, res) => getVideo(req, res));
+app.get('/api/getWdChunkInVideo', (req, res) => getWdChunkInVideo(req, res));
+app.get('/api/getStrtChunkInVideo', (req, res) => getStrtChunkInVideo(req, res));
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 

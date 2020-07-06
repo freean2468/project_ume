@@ -28,8 +28,8 @@
     margin:5px 5px;
 }
 
-.Channel .Words .ChannelCard,
-.Channel .Usages .ChannelCard {
+.Channel .Words .Card,
+.Channel .Usages .Card {
     display:inline-block;
     text-align:center;
     top:0;
@@ -47,7 +47,58 @@
     cursor: pointer;
 }
 
-.Channel .Words .ChannelCard:hover,
-.Channel .Usages .ChannelCard:hover {
+.Channel .Words .Card:hover,
+.Channel .Usages .Card:hover {
     background-color:#525252;
+}
+
+.ShowWindow {
+    position:relative;
+    /* width:100%; */
+    padding:10px;
+    margin:0;
+    border-top:1px solid #bebebe;
+    border-bottom:1px solid #bebebe;
+}
+
+.ShowWindow p {
+    text-align:center;
+    font-size:22px;
+    font-family: 'Jua', sans-serif;
+}
+
+.ShowWindow .Card {
+    display:inline-block;
+    width:160px;
+    top:0;
+    background-color:#585858;
+    box-shadow: 0 0 5px 0 rgba(255,255,255,.4);
+    white-space: pre-wrap;
+    /* padding: 5px 5px 5px 5px; */
+    /* margin: 5px 5px; */
+    /* border-radius:4px; */
+
+    cursor: pointer;
+}
+
+.ShowWindow .Card:hover {
+    background-color:#696969;
+    box-shadow: 0 0 5px 0 rgba(255,255,255,.8);
+}
+
+.ShowWindow .Card .Source {
+    width:100%;
+    padding: auto auto;
+    text-align:center;
+    background-color:#3d3d3d;
+
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    font-weight:500;
+    letter-spacing: .4px;
+}
+
+.ShowWindow .Card .Stc {
+    text-align:left;
+    padding: 5px 5px;
 }

@@ -31,7 +31,7 @@ export default class YPlayer extends Component {
     this.seekTo = this.seekTo.bind(this);
 
     this.state = {
-      textChild : <TextDisplay id={props.link.link} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
+      textChild : <TextDisplay id={props.link} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
       seconds : 0,
       interval : null,
       player : null
@@ -93,7 +93,7 @@ export default class YPlayer extends Component {
       <>
         <YouTube containerClassName={this.props.container} 
           className={this.props.class} 
-          videoId={this.props.link.link} 
+          videoId={this.props.link} 
           opts={opts} 
           onPause={this.handleOnPause} 
           onPlay={this.handleOnPlay}
