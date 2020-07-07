@@ -167,7 +167,7 @@ export default class TextDisplay extends Component {
                                 break;
                             }
                         } else {
-                            if (second >= wd.st && second <= nWd.st) {
+                            if (second >= wd.st && second < nWd.st) {
                                 autoIdx = i;
                                 break;
                             }

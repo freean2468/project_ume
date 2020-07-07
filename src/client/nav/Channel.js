@@ -62,8 +62,6 @@ export default class Channel extends Component {
                         let buffer = toArrayBuffer(res.ib.data);
                         res.ib = new Blob([buffer], {type:"image/jpeg"});
 
-                        console.log(res.ib);
-
                         let data = this.state.data;
 
                         data.push(res);
@@ -100,8 +98,8 @@ export default class Channel extends Component {
         }
     }
 
-    handleOnClickCard(e, link) {
-        this.setLink(link);
+    handleOnClickCard(e, link, st) {
+        this.setLink(link, st);
     }
 
     render() {
@@ -152,7 +150,7 @@ export default class Channel extends Component {
                             {/* <p>{this.props.rt} : {this.props.data.lt}</p> */}
                             {/* <p>{this.props.data.t} : {this.props.data.usg}</p> */}
                             {this.state.data.map((data, idx) =>
-                                <span className="Card" key={idx} onClick={(e)=>this.handleOnClickCard(e, data.link)}>
+                                <span className="Card" key={idx} onClick={(e)=>this.handleOnClickCard(e, data.link, data.st)}>
                                     <img src={window.URL.createObjectURL(data.ib)}/>
                                     <div className="Source">{sourceList.source[data.source]}</div>
                                     <div className="Stc">{data.stc}</div>

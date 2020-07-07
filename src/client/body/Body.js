@@ -6,6 +6,8 @@ import './slider.css'
 export default class Body extends Component {
   constructor(props) {
     super(props);
+
+    this.yplayerRef = React.createRef();
   }
   
   render() {
@@ -13,7 +15,9 @@ export default class Body extends Component {
       <div className="Body">
         {this.props.link !== null ?
           <div className="VideoPlayer">
-            <YPlayer link={this.props.link} container="IframeContainer" class="Iframe"/>
+            <YPlayer link={this.props.link} container="IframeContainer" class="Iframe"
+                    ref={this.yplayerRef}
+            />
           </div>
           :
           <div className="Home">

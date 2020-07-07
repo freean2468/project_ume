@@ -22,6 +22,16 @@ var listWordJson = JSON.parse(fs.readFileSync(LIST_WORD, "utf8"));
 
 app.use(express.static("dist"));
 
+class PerformanceManager {
+    constructor() {
+        this.now = Date.now();
+    }
+
+    printPerformance() {
+        console.log((Date.now() - this.now)/1000+'s')
+    }
+}
+
 function preSearch(req, res) {
     const splitAt = index => x => [x.slice(0, index), x.slice(index)]
     const query = req.query;
@@ -128,26 +138,73 @@ async function getWdChunkInVideo(req, res) {
     const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`;
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     const query = req.query;
-    const vid = query.vid, c = query.c.trim(), stc = query.stc, wd = query.wd;
+    const vid = query.vid, c = parseInt(query.c.trim()), stc = parseInt(query.stc.trim()), wd = parseInt(query.wd.trim());
+    const pm = new PerformanceManager();
 
     try {
         // Connect to the MongoDB cluster
-        await client.connect()
-        
-        const result = await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).findOne({ 
-            _id: vid
-        });
-            
-        if (result) {
-            return res.json({
-                source: result.source,
-                stc: result.c[c].t.stc[stc].ct,
-                st: result.c[c].t.stc[stc].wd[wd].st,
-                ib: result.c[c].t.stc[stc].wd[wd].ib
-            });
-        } else {
-            throw new Error('error occured!');
-        }
+        await client.connect();
+
+        await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).aggregate([
+            { $match: {
+                _id:vid
+            }},
+
+            { $project: {
+                source : 1,
+                c : { 
+                    $let : { 
+                        vars : {
+                            c : { $arrayElemAt:["$c", c] }
+                        },
+                        in : {
+                            stc : { 
+                                $let : {
+                                    vars : {
+                                        stc : { $arrayElemAt:["$$c.t.stc", stc] }
+                                    },
+                                    in : {
+                                        ct : "$$stc.ct",
+                                        wd : {
+                                            st : {
+                                                $let : {
+                                                    vars : {
+                                                        wd : { $arrayElemAt:["$$stc.wd", wd] }
+                                                    },
+                                                    in : "$$wd.st"
+                                                }
+                                            },
+                                            ib : {
+                                                $let : {
+                                                    vars : {
+                                                        wd : { $arrayElemAt:["$$stc.wd", wd] }
+                                                    },
+                                                    in : "$$wd.ib"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }}
+        ])
+        .toArray()
+        .then(result => {
+            if (result[0]) {
+                pm.printPerformance();
+                return res.json({
+                    source: result[0].source,
+                    stc: result[0].c.stc.ct,
+                    st: result[0].c.stc.wd.st,
+                    ib: result[0].c.stc.wd.ib
+                });
+            } else {
+                throw new Error('error occured!');
+            }
+        })
     } catch (e) {
         console.error(e.stack)
         res.json({res:e})
@@ -160,28 +217,81 @@ async function getStrtChunkInVideo(req, res) {
     const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`;
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     const query = req.query;
-    const vid = query.vid, c = query.c.trim(), stc = query.stc, strt = query.strt;
+    const vid = query.vid, c = parseInt(query.c.trim()), stc = parseInt(query.stc.trim()), strt = parseInt(query.strt.trim());
+    const pm = new PerformanceManager();
 
     try {
         // Connect to the MongoDB cluster
         await client.connect()
-        
-        const result = await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).findOne({ 
-            _id: vid
+
+        await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).aggregate([
+            { $match: {
+                _id:vid
+            }},
+
+            { $project: {
+                source : 1,
+                c : { 
+                    $let : { 
+                        vars : {
+                            c : { $arrayElemAt:["$c", c] }
+                        },
+                        in : {
+                            stc : { 
+                                $let : {
+                                    vars : {
+                                        stc : { $arrayElemAt:["$$c.t.stc", stc] }
+                                    },
+                                    in : {
+                                        ct : "$$stc.ct",
+                                        strt : {
+                                            $let : {
+                                                vars : {
+                                                    strt : { $arrayElemAt:["$$stc.strt", strt] },
+                                                },
+                                                in : {
+                                                    t : "$$strt.t",
+                                                    usg : "$$strt.usg",
+                                                    from : "$$strt.from",
+                                                    wd : {
+                                                        $let : {
+                                                            vars : {
+                                                                wd : { $arrayElemAt:["$$stc.wd", "$$strt.from"]}
+                                                            },
+                                                            in : {
+                                                                st : "$$wd.st",
+                                                                ib : "$$wd.ib"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }}
+        ])
+        .toArray()
+        .then(result => {
+            if (result[0]) {
+                pm.printPerformance();
+                return res.json({
+                    source: result[0].source,
+                    stc: result[0].c.stc.ct,
+                    t : result[0].c.stc.strt.t,
+                    usg : result[0].c.stc.strt.usg,
+                    st: result[0].c.stc.strt.wd.st,
+                    ib: result[0].c.stc.strt.wd.ib,
+                    wd: result[0].c.stc.strt.from
+                });
+            } else {
+                throw new Error('error occured!');
+            }
         });
-            
-        if (result) {
-            return res.json({
-                source: result.source,
-                stc: result.c[c].t.stc[stc].ct,
-                st: result.c[c].t.stc[stc].wd[result.c[c].t.stc[stc].strt[strt].from].st,
-                ib: result.c[c].t.stc[stc].wd[result.c[c].t.stc[stc].strt[strt].from].ib,
-                t: result.c[c].t.stc[stc].strt[strt].t,
-                usg: result.c[c].t.stc[stc].strt[strt].usg
-            });
-        } else {
-            throw new Error('error occured!');
-        }
     } catch (e) {
         console.error(e.stack);
         res.json({res:e})
@@ -217,3 +327,4 @@ async function replaceListing(client, listing, collection) {
     // console.log(`${result.matchedCount} document(s) matched the query criteria.`);
     console.log(`_id : ${listing['_id']}, for "${listing["link"]}" replaced : matchedCount(${result.matchedCount}), modiefiedCount(${result.modifiedCount})`);
 }
+

@@ -12,18 +12,38 @@ export default class App extends Component {
       link : null
     }
 
+    this.bodyRef = React.createRef();
+
     this.setLink = this.setLink.bind(this);
   }
 
-  setLink(link){
-    this.setState({link:link});
+  setLink(link, st){
+    if (this.state.link === null) {
+      this.setState({
+        link: {
+          link : link,
+          st : st
+        }
+      });
+    } else {
+      if (this.state.link.link === link) {
+        this.bodyRef.current.yplayerRef.current.seekToAndLoad(st);
+      }
+      
+      this.setState({
+        link: {
+          link : link,
+          st : st
+        }
+      });
+    }
   }
 
   render() {
     return (
       <div className="AppContainer">
         <Nav setLink={this.setLink}/>
-        <Body link={this.state.link}/>
+        <Body ref={this.bodyRef} link={this.state.link}/>
         <Footer />
       </div>
     );
