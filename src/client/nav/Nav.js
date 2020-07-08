@@ -38,7 +38,9 @@ export default class Nav extends Component {
             <NavRight/>
             <div className="Dp03"></div>
           </div>
-          <Channel setLink={this.setLink} channel={this.state.channel}/>
+          {this.state.channel &&
+            <Channel setLink={this.setLink} channel={this.state.channel}/>
+          }
         </div>
       </>
     );

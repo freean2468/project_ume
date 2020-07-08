@@ -28,6 +28,7 @@ export default class YPlayer extends Component {
     this.handleOnPlay = this.handleOnPlay.bind(this);
     this.handleOnReady = this.handleOnReady.bind(this);
     this.handleOnStateChange = this.handleOnStateChange.bind(this);
+    this.handleOnError = this.handleOnError.bind(this);
 
     this.textDisplayContainerEl = document.createElement("div");
     this.textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer');
@@ -47,7 +48,6 @@ export default class YPlayer extends Component {
   setSeconds(target) {
     let ct = target.getCurrentTime()
 
-    console.log('playing : ', ct);
     this.setState({seconds : ct})
     this.textDisplayRef.current.updateSeconds(ct);
   }
@@ -62,28 +62,36 @@ export default class YPlayer extends Component {
     // clearInterval(this.state.interval);
   }
 
+  handleOnError(e) {
+    switch (e.data) {
+      default:
+        console.log('error occurd in yplayer : ', e.data);
+        break;
+    }
+  }
+
   handleOnStateChange(e) {
     const state = e.target.getPlayerState();
     this.setState({ prevState:this.state.state, state:state });
 
     switch (state) {
       case -1:  // doesn't begin
-        // console.log('-1'); 
+        console.log('not begin'); 
         break;
       case 0: // ended
-        // console.log('0');
+        console.log('ended');
         break;
       case 1: // playing
-        // console.log('1');
+        console.log('playing');
         break;
       case 2: // pause
-        // console.log('2');
+        console.log('pause');
         break;
       case 3: //  buffering
-        // console.log('3'); 
+        console.log('buffering');
         break;
-      case 5: // video signal
-        // console.log('5');
+      case 5: // CUED
+        console.log('cued');
         break;
     }
   }
@@ -98,7 +106,7 @@ export default class YPlayer extends Component {
     this.state.player.playVideo();
     this.state.player.mute();
     setTimeout(function (){
-      console.log('hi')
+      that.state.player.seekTo(seconds, true);
       that.state.player.pauseVideo();
       that.state.player.unMute();
     }, 100);
@@ -113,7 +121,8 @@ export default class YPlayer extends Component {
         rel: 0,
         fs:0,
         controls:1,
-        modestbranding:1
+        modestbranding:1,
+        iv_load_policy:3
       },
     };
 
@@ -127,6 +136,7 @@ export default class YPlayer extends Component {
           onPlay={this.handleOnPlay}
           onReady={this.handleOnReady}
           onStateChange={this.handleOnStateChange}
+          onError={this.handleOnError}
         />
         {ReactDOM.createPortal(
           this.state.textChild,
