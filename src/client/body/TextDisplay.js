@@ -10,7 +10,6 @@ export default class TextDisplay extends Component {
         this.displayRef = React.createRef();
 
         this.state = {
-            id : props.id,
             videoInfo : null,
             playingIndex : -1,
             seconds : 0,
@@ -23,15 +22,18 @@ export default class TextDisplay extends Component {
             isAutomode : true
         }
 
-        fetch('/api/getVideo?id='+this.state.id)
-            .then(res => res.json())
-            .then(json => this.initiateDisplay(json))
-
         this.seekTo = props.seekTo.bind(this);
 
         this.setPreSelectedIdx = this.setPreSelectedIdx.bind(this);
         this.setSelectedIdx = this.setSelectedIdx.bind(this);
         this.triggerAutomode = this.triggerAutomode.bind(this);
+    }
+
+    componentDidMount() {
+        console.log(this.props.id)
+        fetch(`/api/getVideo?id=${encodeURIComponent(this.props.id)}`)
+            .then(res => res.json())
+            .then(json => this.initiateDisplay(json))
     }
 
     initiateDisplay(json) {

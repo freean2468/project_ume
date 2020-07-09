@@ -6,14 +6,14 @@ export default class NavLeft extends Component {
       super(props);
 
       this.handleOnClick = this.handleOnClick.bind(this);
-      this.setLink = props.setLink.bind(this);
+      this.setYVideo = props.setYVideo.bind(this);
       this.setChannel = props.setChannel.bind(this);
       this.toHome = props.toHome.bind(this);
     }
 
     handleOnClick() {
       this.toHome();
-      this.setLink(null);
+      this.setYVideo(null);
       this.setChannel(null);
     }
 

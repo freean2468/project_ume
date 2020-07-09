@@ -17,7 +17,7 @@ export default class Nav extends Component {
 
     this.setChannel = this.setChannel.bind(this);
     this.toHome = this.toHome.bind(this);
-    this.setLink = props.setLink.bind(this);
+    this.setYVideo = props.setYVideo.bind(this);
   }
 
   toHome() {
@@ -33,13 +33,13 @@ export default class Nav extends Component {
       <>
         <div className="NavContainer">
           <div className="Nav">
-            <NavLeft setLink={this.setLink} setChannel={this.setChannel} toHome={this.toHome}/>
+            <NavLeft setYVideo={this.setYVideo} setChannel={this.setChannel} toHome={this.toHome}/>
             <NavCenter setChannel={this.setChannel} ref={this.centerRef}/>
             <NavRight/>
             <div className="Dp03"></div>
           </div>
           {this.state.channel &&
-            <Channel setLink={this.setLink} channel={this.state.channel}/>
+            <Channel setYVideo={this.setYVideo} channel={this.state.channel}/>
           }
         </div>
       </>

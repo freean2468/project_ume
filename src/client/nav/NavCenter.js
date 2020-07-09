@@ -37,7 +37,6 @@ export default class NavCenter extends Component {
         this.handleOnMouseLeaveMenu = this.handleOnMouseLeaveMenu.bind(this);
         this.handleOnClickRes = this.handleOnClickRes.bind(this);
         this.onClickOutsideHandler = this.onClickOutsideHandler.bind(this);
-        this.handleOnFocusOnSearch = this.handleOnFocusOnSearch.bind(this);
 
         this.setSearch = this.setSearch.bind(this);
     }
@@ -94,19 +93,13 @@ export default class NavCenter extends Component {
             this.setState({search: value})
     
             fetch(`/api/preSearch?search=${value}`)
-              .then(res => res.json())
-              .then(res => { 
-                this.setState({searchRes:res}); 
-              })
+            .then(res => res.json())
+            .then(res => { 
+              this.setState({searchRes:res}); 
+            });
           } 
         }
     } 
-
-    handleOnFocusOnSearch(e) {
-      if (this.state.search !== '') {
-        
-      }
-    }
 
     render() {
       let suggestionDisplay = 'none';
@@ -122,7 +115,6 @@ export default class NavCenter extends Component {
                         value={this.state.search}
                         placeholder="english, @한글, $game_title"
                         onChange={(e) => this.handleOnChange(e.target.value)}
-                        onFocus={() => this.handleOnFocusOnSearch()}
                     />
                     <img className="SearchIcon"
                         ref={this.searchIconRef}

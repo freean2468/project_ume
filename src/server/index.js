@@ -300,6 +300,40 @@ async function getStrtChunkInVideo(req, res) {
     }
 };
 
+async function getLink(req, res) {
+    const uri = `mongodb+srv://sensebe:${PASSWORD}@agjakmdb-j9ghj.azure.mongodb.net/test`
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    const id = req.query.id
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect()
+        
+        const result = await client.db(DATABASE_NAME).collection(VIDEO_COLLECTION).aggregate([
+            { $match: {
+                _id:id
+            }},
+
+            { $project: {
+                link : 1,
+            }}
+        ])
+        .toArray()
+        .then(result => {
+            if (result[0]) {
+                return res.send(result[0].link)
+            } else {
+                throw new Error('no result!');
+            }
+        });
+    } catch (e) {
+        console.error(e)
+        res.json({res:e})
+    } finally {
+        await client.close()
+    }
+}
+
 // file 
 app.get('/api/preSearch', (req, res) => preSearch(req, res));
 
@@ -308,6 +342,7 @@ app.get('/api/search', (req, res) => search(req, res));
 app.get('/api/getVideo', (req, res) => getVideo(req, res));
 app.get('/api/getWdChunkInVideo', (req, res) => getWdChunkInVideo(req, res));
 app.get('/api/getStrtChunkInVideo', (req, res) => getStrtChunkInVideo(req, res));
+app.get('/api/getLink', (req, res) => getLink(req, res));
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 

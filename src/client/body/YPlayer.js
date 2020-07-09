@@ -18,7 +18,7 @@ export default class YPlayer extends Component {
     this.seekToAndLoad = this.seekToAndLoad.bind(this);
 
     this.state = {
-      textChild : <TextDisplay id={props.link.link} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
+      textChild : <TextDisplay id={props.link.id} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
       seconds : 0,
       interval : null,
       player : null

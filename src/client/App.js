@@ -14,35 +14,44 @@ export default class App extends Component {
 
     this.bodyRef = React.createRef();
 
-    this.setLink = this.setLink.bind(this);
+    this.setYVideo = this.setYVideo.bind(this);
   }
 
-  setLink(link, st){
-    if (this.state.link === null) {
-      this.setState({
-        link: {
-          link : link,
-          st : st
+  setYVideo(vid, st){
+
+    fetch(`/api/getLink?id=${encodeURIComponent(vid)}`)
+    .then(res => res.text())
+    .then(res => {
+      // gotta load link data from server
+      console.log(res);
+      if (this.state.link === null) {
+        this.setState({
+          link: {
+            id : vid,
+            link : res,
+            st : st
+          }
+        });
+      } else {
+        if (this.state.link.link === res) {
+          this.bodyRef.current.yplayerRef.current.seekToAndLoad(st);
         }
-      });
-    } else {
-      if (this.state.link.link === link) {
-        this.bodyRef.current.yplayerRef.current.seekToAndLoad(st);
+        
+        this.setState({
+          link: {
+            id : vid,
+            link : res,
+            st : st
+          }
+        });
       }
-      
-      this.setState({
-        link: {
-          link : link,
-          st : st
-        }
-      });
-    }
+    });
   }
 
   render() {
     return (
       <div className="AppContainer">
-        <Nav setLink={this.setLink}/>
+        <Nav setYVideo={this.setYVideo}/>
         <Body ref={this.bodyRef} link={this.state.link}/>
         <Footer />
       </div>

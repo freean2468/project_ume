@@ -15,7 +15,7 @@ export default class Channel extends Component {
         this.handleOnClickCard = this.handleOnClickCard.bind(this);
         this.handlerOnClickChunk = this.handlerOnClickChunk.bind(this);
         
-        this.setLink = props.setLink.bind(this);
+        this.setYVideo = props.setYVideo.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -49,14 +49,14 @@ export default class Channel extends Component {
             let lk = data.lk[i];
 
             if (flag === 0) { // wd
-                fetch(`/api/getWdChunkInVideo?vid=${lk.vid}&c=${lk.c}
+                fetch(`/api/getWdChunkInVideo?vid=${encodeURIComponent(lk.vid)}&c=${lk.c}
                         &stc=${lk.stc}&wd=${lk.wd}`)
                 .then(res => res.json())
                 .then(res => {
                     if (res.res !== undefined) {
                         console.log('error occured : ', res.res);
                     } else {
-                        res.link = lk.vid;
+                        res.vid = lk.vid;
                         res.pos = {
                             c: lk.c,
                             stc: lk.stc,
@@ -84,14 +84,14 @@ export default class Channel extends Component {
                     }
                 });
             } else { // strt
-                fetch(`/api/getStrtChunkInVideo?vid=${lk.vid}&c=${lk.c}
+                fetch(`/api/getStrtChunkInVideo?vid=${encodeURIComponent(lk.vid)}&c=${lk.c}
                         &stc=${lk.stc}&strt=${lk.strt}`)
                 .then(res => res.json())
                 .then(res => {
                     if (res.res !== undefined) {
                         console.log('error occured : ', res.res);
                     } else {
-                        res.link = lk.vid;
+                        res.vid = lk.vid;
                         res.pos = {
                             c: lk.c,
                             stc: lk.stc,
@@ -120,8 +120,8 @@ export default class Channel extends Component {
         }
     }
 
-    handleOnClickCard(e, link, st) {
-        this.setLink(link, st);
+    handleOnClickCard(e, vid, st) {
+        this.setYVideo(vid, st);
     }
 
     render() {
@@ -167,7 +167,7 @@ export default class Channel extends Component {
                         {/* <p>{this.props.rt} : {this.props.data.lt}</p> */}
                         {/* <p>{this.props.data.t} : {this.props.data.usg}</p> */}
                         {this.state.lkList.map((data, idx) =>
-                            <span className="Card" key={idx} onClick={(e)=>this.handleOnClickCard(e, data.link, data.st)}>
+                            <span className="Card" key={idx} onClick={(e)=>this.handleOnClickCard(e, data.vid, data.st)}>
                                 <img src={window.URL.createObjectURL(data.ib)}/>
                                 <div className="Source">{sourceList.source[data.source]}</div>
                                 <div className="Stc">{data.stc}</div>
