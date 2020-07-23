@@ -1,138 +1,99 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './navcenter.css'
-import search from '../../../public/search.svg';
+import searchSvg from '../../../public/search.svg';
 
-function BoldedText(text, shouldBeBold) {
-    const textArray = text.split(shouldBeBold);
-    return (
-      <span key>
-        {textArray.map((item, index) => (
-          <span key={index}>
-            {item}
-            {index !== textArray.length - 1 && (
-              <b>{shouldBeBold}</b>
-            )}
-          </span>
-        ))}
-      </span>
-    );
-}
+export default function NavCenter(props) {
+  const centerRef = useRef(null);
+  const searchRef = useRef(null);
 
-export default class NavCenter extends Component {
-    constructor(props) {
-        super(props);
-    
-        this.state = {
-          search:'',
-          searchRes:{},
-          selectedRt:null,
-          isSearchFocus:false
-        }
+  useEffect(() => {
+    window.addEventListener('click', onClickOutsideHandler);
+    return () => {
+      window.removeEventListener('click', onClickOutsideHandler);
+    };
+  },[]);
 
-        this.navCenterRef = React.createRef();
-        this.searchRef = React.createRef();
-        this.searchIconRef = React.createRef();
-        this.suggestionRef = React.createRef();
-    
-        this.handleOnMouseLeaveMenu = this.handleOnMouseLeaveMenu.bind(this);
-        this.handleOnClickRes = this.handleOnClickRes.bind(this);
-        this.onClickOutsideHandler = this.onClickOutsideHandler.bind(this);
-
-        this.setSearch = this.setSearch.bind(this);
-    }
-
-    componentDidMount() {
-        window.addEventListener('click', this.onClickOutsideHandler);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('click', this.onClickOutsideHandler);
-    }
-
-    setSearch(value) {
-      if (value === ''){
-        this.setState({searchRes:{},search:''});
-        this.props.setChannel(null);
+  function onClickOutsideHandler(event) {
+      if (searchRef.current.contains(event.target)) {
+        props.nav.search.setIsSearchFocus(true);
       } else {
-        this.setState({search:value});
+        props.nav.search.setIsSearchFocus(false);
       }
-    }
+  }
+  
+  function handleClickRes(e, key) {
+    props.nav.search.setSelected(key);
+    props.nav.search.setValue(key);
 
-    onClickOutsideHandler(event) {
-        if (this.searchRef.current.contains(event.target)) {
-          this.setState({isSearchFocus:true});
-        } else {
-          this.setState({isSearchFocus:false});
-        }
-    }
-    
-    handleOnMouseLeaveMenu(e) {
-        this.props.handleMouseEnter(e);
-    }
-    
-    handleOnClickRes(e, key) {
-        this.setState({
-          selectedRt:key,
-          search:key
-        });
-        fetch(`/api/search?id=${this.state.searchRes[key]}`)
+    fetch(`/api/search?id=${props.nav.search.res[key]}`)
+    .then(res => res.json())
+    .then(res => {
+      props.nav.channel.setValue(res);
+    });
+  }
+
+  function handleChange(value) {
+      if (value === ''){
+        props.nav.search.setRes({});
+        props.nav.search.setValue('');
+        props.nav.channel.setValue(null);
+      } else if (value !== '') {
+        const filter = /^['a-zA-Z-/$/@]+$/;
+  
+        if (filter.test(value[0])) {
+          props.nav.search.setValue(value);
+  
+          fetch(`/api/preSearch?search=${value}`)
           .then(res => res.json())
-          .then(res => {
-              this.props.setChannel(res);
-          })
-    }
-    
-    handleOnChange(value) {
-        if (value === ''){
-          this.setState({searchRes:{},search:''});
-          this.props.setChannel(null);
-        } else if (value !== '') {
-          const filter = /^['a-zA-Z-/$/@]+$/;
-    
-          if (filter.test(value[0])) {
-            this.setState({search: value})
-    
-            fetch(`/api/preSearch?search=${value}`)
-            .then(res => res.json())
-            .then(res => { 
-              this.setState({searchRes:res}); 
-            });
-          } 
+          .then(res => { 
+            props.nav.search.setRes(res); 
+          });
+        } else {
+          props.nav.search.setValue("@");
         }
-    } 
-
-    render() {
-      let suggestionDisplay = 'none';
-      if (this.state.isSearchFocus && this.state.search !== '') {
-        suggestionDisplay = 'block';
       }
-      return (
-        <div className="NavCenter" ref={this.navCenterRef}>
-            <div className="SearchBar">
-                <div className="SearchForm">
-                    <input className="Search"
-                        ref={this.searchRef}
-                        value={this.state.search}
-                        placeholder="english, @한글, $game_title"
-                        onChange={(e) => this.handleOnChange(e.target.value)}
-                    />
-                    <img className="SearchIcon"
-                        ref={this.searchIconRef}
-                        src={search} alt="search button" 
-                        onMouseEnter={this.props.handleMouseEnter}  
-                    />
-                </div>
-                <div className="Suggestion" style={{display:suggestionDisplay}} ref={this.suggestionRef}>
-                    <div className="SuggestionList">
-                        {Object.keys(this.state.searchRes).map((key, idx) => 
-                            <div className="SuggestionItem" key={idx} onClick={(e)=>this.handleOnClickRes(e, key)}>
-                                {BoldedText(key, this.state.search)}
-                            </div>)
-                        }
-                    </div>
+  } 
+
+  return (
+    <div className="NavCenter" ref={centerRef}>
+        <div className="SearchBar">
+            <div className="SearchForm">
+                <input className="Search" ref={searchRef}
+                    value={props.nav.search.value}
+                    placeholder="english, @한글, $game_title"
+                    onChange={(e) => handleChange(e.target.value)}
+                />
+                <img className="SearchIcon"
+                    src={searchSvg} alt="search button" 
+                    // onMouseEnter={props.handleMouseEnter}  
+                />
+            </div>
+            <div className="Suggestion" style={props.nav.search.styleSuggestion()}>
+                <div className="SuggestionList">
+                    {Object.keys(props.nav.search.res).map((key, idx) => 
+                        <div className="SuggestionItem" key={idx} onClick={(e)=>handleClickRes(e, key)}>
+                            {BoldedText(key, props.nav.search.value)}
+                        </div>)
+                    }
                 </div>
             </div>
         </div>
-      );  
-    }
-  }
+    </div>
+  );  
+}
+
+function BoldedText(text, shouldBeBold) {
+  const textArray = text.split(shouldBeBold);
+  return (
+    <span key>
+      {textArray.map((item, index) => (
+        <span key={index}>
+          {item}
+          {index !== textArray.length - 1 && (
+            <b>{shouldBeBold}</b>
+          )}
+        </span>
+      ))}
+    </span>
+  );
+}

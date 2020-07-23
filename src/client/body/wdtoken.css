@@ -29,11 +29,12 @@
     background-color: rgba(158, 69, 69, 0);
     overflow: visible;
     position: absolute;
-    top:90%;
     left:50%;
     width:auto;
-    transform : translate(-50%, -150%);
+    transform : translate(-50%, 0);
     color:RGB(255,255,255,1);
+    
+    top:57%;
 }
 
 .Body .TokenInfo .StrtInfo {

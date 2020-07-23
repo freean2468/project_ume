@@ -1,60 +1,52 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import Nav from './nav/Nav';
 import Body from './body/Body';
 import Footer from './footer/Footer';
 import './app.css';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
+export default function App () {
+  const route = useRoute();
+  const bodyRef = useRef(null);
 
-    this.state = {
-      link : null
-    }
+  return (
+    <div className="AppContainer">
+      <Nav route={route}/>
+      {/* <Body ref={bodyRef} link={route}/> */}
+      <Footer />
+    </div>
+  );
+}
 
-    this.bodyRef = React.createRef();
+function useRoute() {
+  const [vid, setVid] = useState('');
+  const [link, setLink] = useState('');
+  const [st, setSt] = useState(0);
 
-    this.setYVideo = this.setYVideo.bind(this);
+  function init() {
+    setVid('');
+    setLink('');
+    setSt(0);
   }
 
-  setYVideo(vid, st){
-
-    fetch(`/api/getLink?id=${encodeURIComponent(vid)}`)
+  function set(_vid, _st) {
+    fetch(`/api/getLink?id=${encodeURIComponent(_vid)}`)
     .then(res => res.text())
     .then(res => {
-      // gotta load link data from server
-      console.log(res);
-      if (this.state.link === null) {
-        this.setState({
-          link: {
-            id : vid,
-            link : res,
-            st : st
-          }
-        });
-      } else {
-        if (this.state.link.link === res) {
-          this.bodyRef.current.yplayerRef.current.seekToAndLoad(st);
-        }
-        
-        this.setState({
-          link: {
-            id : vid,
-            link : res,
-            st : st
-          }
-        });
+      if (route.link === res) {
+        bodyRef.current.yplayerRef.current.seekToAndLoad(_st);
       }
+      setVid(_vid);
+      setLink(res);
+      setSt(_st);
     });
-  }
+  };
 
-  render() {
-    return (
-      <div className="AppContainer">
-        <Nav setYVideo={this.setYVideo}/>
-        <Body ref={this.bodyRef} link={this.state.link}/>
-        <Footer />
-      </div>
-    );
-  }
+  return {
+    vid,
+    link,
+    st,
+
+    init,
+    set
+  };
 }
