@@ -67,6 +67,7 @@
 
 .UIDisplay .UIContainer table{
     max-width:5%;
+    padding-left:5px;
 }
 
 .UIDisplay .UIContainer td{

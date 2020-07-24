@@ -1,78 +1,99 @@
-import React, { Component } from '../../../node_modules/react';
+import React, { useState, useEffect } from '../../../node_modules/react';
 import ReactDOM from '../../../node_modules/react-dom';
 import YouTube from '../../../node_modules/react-youtube';
-import TextDisplay from './TextDisplay'
- 
-export default class YPlayer extends Component {
-  constructor(props) {
-    super(props);
+import TextDisplay from './TextDisplay';
 
-    this.state = {
-      prevState:null,
-      state:null,
+function YPlayer(props) {
+  const [textDisplayContainerEl, setTextDisplayContainerEl] = useState(document.createElement("div"));
+
+  useEffect(() => {
+    textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer');
+  }, []);
+
+  useEffect(() => {
+    const container = document.getElementsByClassName(props.container)[0];
+    container.appendChild(textDisplayContainerEl);
+    return () => {
+      const container = document.getElementsByClassName(props.container)[0];
+      container.removeChild(textDisplayContainerEl);
+      setTextDisplayContainerEl(null);
     }
+  }, []);
 
-    this.textDisplayRef = React.createRef();
+  return (
+    <>
+      <YouTube containerClassName={props.container} 
+        className={props.class} 
+        videoId={props.route.link} 
+        opts={props.route.yplayer.opts} 
+        // onPause={handleOnPause} 
+        // onPlay={handleOnPlay}
+        onReady={props.route.yplayer.handleReady}
+        onStateChange={props.route.yplayer.handleOnStateChange}
+        onError={props.route.yplayer.handleOnError}
+      />
+      {ReactDOM.createPortal(
+        <TextDisplay route={props.route}/>,
+        textDisplayContainerEl
+      )}
+    </>
+  );
+}
 
-    this.seekTo = this.seekTo.bind(this);
-    this.seekToAndLoad = this.seekToAndLoad.bind(this);
+function useYPlayer(st) {
+  const [opts, setOpts] = useState({
+    height: '1080',
+    width: '1920',
+    playerVars: {
+      autoplay: 0,
+      rel: 0,
+      fs:0,
+      controls:1,
+      modestbranding:1,
+      iv_load_policy:3
+    },
+  });
+  const [player, setPlayer] = useState(null);
 
-    this.state = {
-      textChild : <TextDisplay id={props.link.id} ref={this.textDisplayRef} seekTo={this.seekTo}/>,
-      seconds : 0,
-      interval : null,
-      player : null
-    }
-
-    this.handleOnPause = this.handleOnPause.bind(this);
-    this.handleOnPlay = this.handleOnPlay.bind(this);
-    this.handleOnReady = this.handleOnReady.bind(this);
-    this.handleOnStateChange = this.handleOnStateChange.bind(this);
-    this.handleOnError = this.handleOnError.bind(this);
-
-    this.textDisplayContainerEl = document.createElement("div");
-    this.textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer');
+  function seekTo(seconds) {
+    player.seekTo(seconds, true);
   }
 
-  componentDidMount = () => {
-    const container = document.getElementsByClassName(this.props.container)[0];
-    container.appendChild(this.textDisplayContainerEl);
+  function seekToAndLoad(seconds) {
+    player.seekTo(seconds, true);
+    player.playVideo();
+    player.mute();
+    setTimeout(function (){
+      player.seekTo(seconds, true);
+      player.pauseVideo();
+      player.unMute();
+    }, 100);
   };
-  
-  componentWillUnmount = () => {
-    const container = document.getElementsByClassName(this.props.container)[0];
-    container.removeChild(this.textDisplayContainerEl);
-    clearInterval(this.state.interval);
+
+  function handleReady(event) {
+    event.target.playVideo();
+    event.target.seekTo(st, true);
+    event.target.mute();
+
+    setTimeout(function (){
+      event.target.pauseVideo();
+      event.target.unMute();
+    }, 400);
+
+    // access to player in all event handlers via event.target
+    setPlayer(event.target);
   };
 
-  setSeconds(target) {
-    let ct = target.getCurrentTime()
-
-    this.setState({seconds : ct})
-    this.textDisplayRef.current.updateSeconds(ct);
-  }
-
-  handleOnPlay(e) {
-    // this.setState({interval : setInterval(() => {
-    //   this.setSeconds(e)
-    // }, 100)});
-  }
-
-  handleOnPause(e) {
-    // clearInterval(this.state.interval);
-  }
-
-  handleOnError(e) {
+  function handleError(e) {
     switch (e.data) {
       default:
         console.log('error occurd in yplayer : ', e.data);
         break;
     }
-  }
+  };
 
-  handleOnStateChange(e) {
+  function handleStateChange(e) {
     const state = e.target.getPlayerState();
-    this.setState({ prevState:this.state.state, state:state });
 
     switch (state) {
       case -1:  // doesn't begin
@@ -94,72 +115,22 @@ export default class YPlayer extends Component {
         console.log('cued');
         break;
     }
-  }
+  };
 
-  seekTo(seconds) {
-    this.state.player.seekTo(seconds, true);
-  }
+  return {
+    opts,
+    player,
 
-  seekToAndLoad(seconds) {
-    const that = this;
-    this.state.player.seekTo(seconds, true);
-    this.state.player.playVideo();
-    this.state.player.mute();
-    setTimeout(function (){
-      that.state.player.seekTo(seconds, true);
-      that.state.player.pauseVideo();
-      that.state.player.unMute();
-    }, 100);
-  }
+    handleReady,
+    handleError,
+    handleStateChange,
 
-  render() {
-    const opts = {
-      height: '1080',
-      width: '1920',
-      playerVars: {
-        autoplay: 0,
-        rel: 0,
-        fs:0,
-        controls:1,
-        modestbranding:1,
-        iv_load_policy:3
-      },
-    };
-
-    return (
-      <>
-        <YouTube containerClassName={this.props.container} 
-          className={this.props.class} 
-          videoId={this.props.link.link} 
-          opts={opts} 
-          onPause={this.handleOnPause} 
-          onPlay={this.handleOnPlay}
-          onReady={this.handleOnReady}
-          onStateChange={this.handleOnStateChange}
-          onError={this.handleOnError}
-        />
-        {ReactDOM.createPortal(
-          this.state.textChild,
-          this.textDisplayContainerEl
-        )}
-      </>
-    );
-  }
- 
-  handleOnReady(event) {
-    event.target.playVideo();
-    event.target.seekTo(this.props.link.st, true);
-    event.target.mute();
-    setTimeout(function (){
-      event.target.pauseVideo();
-      event.target.unMute();
-    }, 400);
-
-    this.setState({interval : setInterval(() => {
-      this.setSeconds(event.target)
-    }, 100)});
-
-    // access to player in all event handlers via event.target
-    this.setState({player:event.target});
-  }
+    seekTo,
+    seekToAndLoad
+  };
 }
+
+export {
+  YPlayer as default,
+  useYPlayer
+};

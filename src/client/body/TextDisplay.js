@@ -1,43 +1,162 @@
-import React, { Component } from '../../../node_modules/react';
+import React, { useState, useEffect, useRef } from '../../../node_modules/react';
 import WdToken from './WdToken';
 import './textdisplay.css'
 import UIDisplay from './UIDisplay';
 
-export default class TextDisplay extends Component {
-    constructor(props){
-        super(props)
+export default function TextDisplay(props) {
+    const displayRef = useRef(null);
+    const textDisplay = useTextDisplay(props.route, displayRef);
 
-        this.displayRef = React.createRef();
+    return (
+        <>
+            <div className="TextDisplay" ref={displayRef} 
+                style={{
+                    fontSize:`${textDisplay.fontSize}px`,
+                    paddingTop:`${textDisplay.cv.pt}%`,
+                    paddingLeft:`${textDisplay.cv.pl}%`,
+                    paddingRight:`${textDisplay.cv.pr}%`,
+                    fontFamily:`${textDisplay.cv.ff}`
+                }}>
+                {textDisplay.playingIndex >= 0 &&
+                    textDisplay.scrt[textDisplay.playingIndex].map((wd, idx)=>
+                    <WdToken key={idx} wd={wd} abIdx={idx} textDisplay={textDisplay}/>
+                )}
+            </div>
+            {(textDisplay.videoInfo) &&
+                <UIDisplay route={props.route} textDisplay={textDisplay}/>
+            }
+        </>
+    );
+}
 
-        this.state = {
-            videoInfo : null,
-            playingIndex : -1,
-            seconds : 0,
-            scrt : [[]],
-            cv : [],
-            fontSize : 0,
+function useCv(playingIndex) {
+    const [value, setValue] = useState([]);
+    const [pt, setPt] = useState(0);
+    const [pl, setPl] = useState(0);
+    const [pr, setPr] = useState(0);
+    const [ff, setFf] = useState('');
 
-            selectedIdx : null,
-            preSelectedIdx : null,
-            isAutomode : true
+    useEffect( () => {
+        if (value.length <= 0) return;
+        if (playingIndex <= -1) return;
+
+        setPt(value[playingIndex].pt);
+        setPl(value[playingIndex].pl);
+        setPr(value[playingIndex].pr);
+        setFf(value[playingIndex].ff);
+    }, [playingIndex, value]);
+
+    return {
+        value,
+        pt,
+        pl,
+        pr,
+        ff,
+
+        setValue
+    }
+}
+
+function useTextDisplay(route, displayRef) {
+    const [videoInfo, setVideoInfo] = useState(null);
+    const [playingIndex, setPlayingIndex] = useState(-1);
+    const [scrt, setScrt] = useState([[]]);
+    const cv = useCv(playingIndex);
+    const [fontSize, setFontSize] = useState(0);
+    const [playingTime, setPlayingTime] = useState(0);
+
+    const [selectedIdx, setSelectedIdx] = useState(null);
+    const [preSelectedIdx, setPreSelectedIdx] = useState(null);
+    const [isAuto, setIsAuto] = useState(true);
+
+    useEffect(() => {
+        fetch(`/api/getVideo?id=${encodeURIComponent(route.vid)}`)
+        .then(res => res.json())
+        .then(json => initiateDisplay(json));
+    },[route.vid]);
+
+    useEffect(() => {
+        // may there are memory leaks?
+        const interval = setInterval(() => {
+            if (route.yplayer.player) setPlayingTime(route.yplayer.player.getCurrentTime());
+        }, 100);
+        return () => clearInterval(interval);
+    },[route.yplayer.player]);
+
+    useEffect(() => {
+        if (!videoInfo) return;
+
+        let c = videoInfo.c, _playingIndex = -1;
+        for (let i = 0; i < c.length; ++i) {
+            if (parseFloat(c[i].st) <= playingTime && playingTime <= parseFloat(c[i].et)) {
+                _playingIndex = i;
+                break;
+            }
         }
 
-        this.seekTo = props.seekTo.bind(this);
+        let fs = 0;
+        if (cv.value !== [] && _playingIndex >= 0) {
+            fs = cv.value[_playingIndex].fs;
+        }
+        
+        if (playingIndex !== _playingIndex) {
+            let _scrt = scrt;
+            for (let i = 0; i < _scrt.length; ++i) {
+                for (let j = 0; j < _scrt[i].length; ++j) {
+                    _scrt[i][j].autoIdx = null;
+                }
+            }
+            setScrt(_scrt);
+        }
 
-        this.setPreSelectedIdx = this.setPreSelectedIdx.bind(this);
-        this.setSelectedIdx = this.setSelectedIdx.bind(this);
-        this.triggerAutomode = this.triggerAutomode.bind(this);
-    }
+        if (playingIndex !== _playingIndex) {
+            setPreSelectedIdx(null);
+            setSelectedIdx(null);
+        }
 
-    componentDidMount() {
-        console.log(this.props.id)
-        fetch(`/api/getVideo?id=${encodeURIComponent(this.props.id)}`)
-            .then(res => res.json())
-            .then(json => this.initiateDisplay(json))
-    }
+        setPlayingIndex(_playingIndex);
+        setFontSize(fs*displayRef.current.offsetWidth/1920*0.5625);
 
-    initiateDisplay(json) {
-        this.setState({ videoInfo : json })
+        // logic of displaying script info autonomously
+        if (_playingIndex >= 0) {
+            let autoIdx = null;
+
+            if (isAuto) {
+                for (let i = 0; i < scrt[_playingIndex].length; ++i) {
+                    let wd = scrt[_playingIndex][i],
+                        nWd = scrt[_playingIndex][i+1];
+
+                    if (nWd === undefined) {
+                        if (wd.st !== '') {
+                            if (playingTime >= wd.st) {
+                                autoIdx = i;
+                                break;
+                            }
+                        } else {
+                            autoIdx = null;
+                            break;
+                        }
+                    } else {
+                        if (playingTime >= wd.st && playingTime < nWd.st) {
+                            autoIdx = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            let _scrt = scrt;
+
+            for (let i = 0; i < _scrt[_playingIndex].length; ++i) {
+                _scrt[_playingIndex][i].autoIdx = autoIdx;
+            }
+
+            setScrt(_scrt);
+        }
+    },[playingTime]);
+
+    function initiateDisplay(json) {
+        setVideoInfo(json);
 
         let c = json.c, scrt = [[]], cvList = []
 
@@ -107,140 +226,34 @@ export default class TextDisplay extends Component {
             }
         }
 
-        this.setState({ scrt:scrt, cv:cvList });
-    }
+        setScrt(scrt);
+        cv.setValue(cvList);
+    };
 
-    updateSeconds(second){
-        this.setState({seconds : second});
+    function triggerAutomode() {
+        setIsAuto(!isAuto);
+    };
 
-        if (this.state.videoInfo !== null) {
-            let c = this.state.videoInfo.c,
-                playingIndex = -1;
-            for (let i = 0; i < c.length; ++i) {
-                if (c[i].st <= second && second <= c[i].et) {
-                    playingIndex = i;
-                    break;
-                }
-            }
-            let fs = 0;
-            if (this.state.cv !== [] && playingIndex >= 0) {
-                fs = this.state.cv[playingIndex].fs;
-            }
-            
-            if (this.state.playingIndex !== playingIndex) {
-                let scrt = this.state.scrt;
-                for (let i = 0; i < scrt.length; ++i) {
-                    for (let j = 0; j < scrt[i].length; ++j) {
-                        scrt[i][j].autoIdx = null;
-                    }
-                }
-                this.setState({scrt:scrt});
-            }
-
-            if (this.state.playingIndex !== playingIndex) {
-                this.setState({
-                    preSelectedIdx:null,
-                    selectedIdx:null
-                })
-            }
-
-            this.setState({
-                playingIndex:playingIndex,
-                fontSize:fs*this.displayRef.current.offsetWidth/1920*0.5625
-            });
-
-            // logic of displaying script info autonomously
-            if (playingIndex >= 0) {
-                let autoIdx = null;
-
-                if (this.state.isAutomode) {
-                    for (let i = 0; i < this.state.scrt[playingIndex].length; ++i) {
-                        let wd = this.state.scrt[playingIndex][i],
-                            nWd = this.state.scrt[playingIndex][i+1];
-
-                        if (nWd === undefined) {
-                            if (wd.st !== '') {
-                                if (second >= wd.st) {
-                                    autoIdx = i;
-                                    break;
-                                }
-                            } else {
-                                autoIdx = null;
-                                break;
-                            }
-                        } else {
-                            if (second >= wd.st && second < nWd.st) {
-                                autoIdx = i;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                let scrt = this.state.scrt;
-
-                for (let i = 0; i < this.state.scrt[playingIndex].length; ++i) {
-                    scrt[playingIndex][i].autoIdx = autoIdx;
-                }
-
-                this.setState({scrt:scrt});
-            }
-        }
-    }
-
-    setPreSelectedIdx(idx) {
-        this.setState({preSelectedIdx:idx});
-    }
-
-    setSelectedIdx(idx) {
-        if (idx === this.state.selectedIdx) {
-            this.setState({selectedIdx:null});
+    function setMySelectedIdx(idx) {
+        if (idx === selectedIdx) {
+            setSelectedIdx(null);
         } else {
-            this.setState({selectedIdx:idx});
+            setSelectedIdx(idx);
         }
     }
 
-    triggerAutomode() {
-        this.setState({isAutomode:!this.state.isAutomode});
-    }
+    return {
+        videoInfo,
+        playingIndex,
+        scrt,
+        cv,
+        fontSize,
+        selectedIdx,
+        preSelectedIdx,
+        isAuto,
 
-    render() {
-        let pt=0, pl=0, pr=0, ff='';
-        if (this.state.playingIndex >= 0) {
-            pt = this.state.cv[this.state.playingIndex].pt;
-            pl = this.state.cv[this.state.playingIndex].pl;
-            pr = this.state.cv[this.state.playingIndex].pr;
-            ff = this.state.cv[this.state.playingIndex].ff;
-        }
-        return (
-            <>
-                <div className="TextDisplay" ref={this.displayRef} 
-                    style={{
-                        fontSize:`${this.state.fontSize}px`,
-                        paddingTop:`${pt}%`,
-                        paddingLeft:`${pl}%`,
-                        paddingRight:`${pr}%`,
-                        fontFamily:`${ff}`
-                    }}>
-                    {this.state.playingIndex >= 0 &&
-                        this.state.scrt[this.state.playingIndex].map((wd, idx)=>
-                        <WdToken key={idx} dpList={wd.dpList} pp={wd.pp} lt={wd.lt} st={wd.st}
-                                ltList={wd.ltList} strt={wd.strt}
-                                token={wd.token} isSpace={wd.isSpace}   
-                                idxInStc={wd.idxInStc} abIdx={idx} autoIdx={wd.autoIdx} 
-                                preSelectedIdx={this.state.preSelectedIdx} selectedIdx={this.state.selectedIdx}
-                                setPreSelectedIdx={this.setPreSelectedIdx}
-                                setSelectedIdx={this.setSelectedIdx}
-                        />)
-                    }
-                </div>
-                {this.state.videoInfo !== null &&
-                    <UIDisplay c={this.state.videoInfo.c} seekTo={this.props.seekTo}
-                        isAutomode={this.state.isAutomode}
-                        triggerAutomode={this.triggerAutomode}
-                    />
-                }
-            </>
-        );
-    }
+        triggerAutomode,
+        setMySelectedIdx,
+        setPreSelectedIdx
+    };
 }
