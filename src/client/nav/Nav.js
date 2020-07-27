@@ -115,7 +115,16 @@ function useChannel() {
     return {
       display : 'block'
     };
-  }
+  };
+
+  function beforeSetSelected(data) {
+    setList([]);
+    if (data === selected) {
+      setSelected(null);
+    } else {
+      setSelected(data);
+    }
+  };
 
   return {
     value,
@@ -124,7 +133,7 @@ function useChannel() {
 
     setValue,
     setList,
-    setSelected,
+    beforeSetSelected,
 
     init,
     set,

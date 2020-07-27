@@ -75,8 +75,7 @@ export default function Channel(props) {
     }, [props.nav.channel.selected]);
 
     function handlerClickChunk(data) {
-        props.nav.channel.setList([]);
-        props.nav.channel.setSelected(data);
+        props.nav.channel.beforeSetSelected(data);
     };
 
     function handleClickCard(vid, st) {

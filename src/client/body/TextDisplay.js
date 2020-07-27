@@ -76,84 +76,24 @@ function useTextDisplay(route, displayRef) {
     },[route.vid]);
 
     useEffect(() => {
-        // may there are memory leaks?
+        // TODO
+        // might there are memory leaks?
         const interval = setInterval(() => {
-            if (route.yplayer.player) setPlayingTime(route.yplayer.player.getCurrentTime());
+            if (route.yplayer.player) {
+                setPlayingTime(route.yplayer.player.getCurrentTime());
+            }
         }, 100);
         return () => clearInterval(interval);
     },[route.yplayer.player]);
 
     useEffect(() => {
-        if (!videoInfo) return;
-
-        let c = videoInfo.c, _playingIndex = -1;
-        for (let i = 0; i < c.length; ++i) {
-            if (parseFloat(c[i].st) <= playingTime && playingTime <= parseFloat(c[i].et)) {
-                _playingIndex = i;
-                break;
-            }
-        }
-
-        let fs = 0;
-        if (cv.value !== [] && _playingIndex >= 0) {
-            fs = cv.value[_playingIndex].fs;
-        }
-        
-        if (playingIndex !== _playingIndex) {
-            let _scrt = scrt;
-            for (let i = 0; i < _scrt.length; ++i) {
-                for (let j = 0; j < _scrt[i].length; ++j) {
-                    _scrt[i][j].autoIdx = null;
-                }
-            }
-            setScrt(_scrt);
-        }
-
-        if (playingIndex !== _playingIndex) {
-            setPreSelectedIdx(null);
-            setSelectedIdx(null);
-        }
-
-        setPlayingIndex(_playingIndex);
-        setFontSize(fs*displayRef.current.offsetWidth/1920*0.5625);
-
-        // logic of displaying script info autonomously
-        if (_playingIndex >= 0) {
-            let autoIdx = null;
-
-            if (isAuto) {
-                for (let i = 0; i < scrt[_playingIndex].length; ++i) {
-                    let wd = scrt[_playingIndex][i],
-                        nWd = scrt[_playingIndex][i+1];
-
-                    if (nWd === undefined) {
-                        if (wd.st !== '') {
-                            if (playingTime >= wd.st) {
-                                autoIdx = i;
-                                break;
-                            }
-                        } else {
-                            autoIdx = null;
-                            break;
-                        }
-                    } else {
-                        if (playingTime >= wd.st && playingTime < nWd.st) {
-                            autoIdx = i;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            let _scrt = scrt;
-
-            for (let i = 0; i < _scrt[_playingIndex].length; ++i) {
-                _scrt[_playingIndex][i].autoIdx = autoIdx;
-            }
-
-            setScrt(_scrt);
-        }
+        update();
     },[playingTime]);
+
+    useEffect(() => {
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    },[videoInfo, playingTime, cv, scrt]);
 
     function initiateDisplay(json) {
         setVideoInfo(json);
@@ -228,6 +168,78 @@ function useTextDisplay(route, displayRef) {
 
         setScrt(scrt);
         cv.setValue(cvList);
+    };
+
+    function update() {
+        if (!videoInfo) return;
+
+        let c = videoInfo.c, _playingIndex = -1;
+        for (let i = 0; i < c.length; ++i) {
+            if (parseFloat(c[i].st) <= playingTime && playingTime <= parseFloat(c[i].et)) {
+                _playingIndex = i;
+                break;
+            }
+        }
+
+        let fs = 0;
+        if (cv.value !== [] && _playingIndex >= 0) {
+            fs = cv.value[_playingIndex].fs;
+        }
+        
+        if (playingIndex !== _playingIndex) {
+            let _scrt = scrt;
+            for (let i = 0; i < _scrt.length; ++i) {
+                for (let j = 0; j < _scrt[i].length; ++j) {
+                    _scrt[i][j].autoIdx = null;
+                }
+            }
+            setScrt(_scrt);
+        }
+
+        if (playingIndex !== _playingIndex) {
+            setPreSelectedIdx(null);
+            setSelectedIdx(null);
+        }
+
+        setPlayingIndex(_playingIndex);
+        setFontSize(fs*displayRef.current.offsetWidth/1920*0.5625);
+
+        // logic of displaying script info autonomously
+        if (_playingIndex >= 0) {
+            let autoIdx = null;
+
+            if (isAuto) {
+                for (let i = 0; i < scrt[_playingIndex].length; ++i) {
+                    let wd = scrt[_playingIndex][i],
+                        nWd = scrt[_playingIndex][i+1];
+
+                    if (nWd === undefined) {
+                        if (wd.st !== '') {
+                            if (playingTime >= wd.st) {
+                                autoIdx = i;
+                                break;
+                            }
+                        } else {
+                            autoIdx = null;
+                            break;
+                        }
+                    } else {
+                        if (playingTime >= wd.st && playingTime < nWd.st) {
+                            autoIdx = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            let _scrt = scrt;
+
+            for (let i = 0; i < _scrt[_playingIndex].length; ++i) {
+                _scrt[_playingIndex][i].autoIdx = autoIdx;
+            }
+
+            setScrt(_scrt);
+        }
     };
 
     function triggerAutomode() {
