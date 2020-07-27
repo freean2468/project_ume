@@ -25,7 +25,7 @@ export default function UIDisplay(props) {
     return (
         <div className="UIDisplay">
             <div className={classUIDisplay()} onMouseLeave={handleMouseLeave}>
-                {props.textDisplay.videoInfo.c.map((c, idx) =>
+                {props.route.yplayer.textDisplay.videoInfo.c.map((c, idx) =>
                     <div key={idx}>
                         <div className="ScriptToken" onClick={()=>props.route.yplayer.seekTo(c.st)}>
                             {c.t.scrt}
@@ -39,13 +39,13 @@ export default function UIDisplay(props) {
                     <tbody>
                         <tr>
                             <td>
-                                {props.textDisplay.isAuto ?
+                                {props.route.yplayer.textDisplay.isAuto ?
                                     <img className="AutoIcon" src={auto} alt="enabling autonomous mode on/off"
-                                        onClick={props.textDisplay.triggerAutomode}
+                                        onClick={props.route.yplayer.textDisplay.triggerAutomode}
                                     ></img>
                                 :
                                     <img className="AutoIcon Inactive" src={auto} alt="enabling autonomous mode on/off"
-                                        onClick={props.textDisplay.triggerAutomode}
+                                        onClick={props.route.yplayer.textDisplay.triggerAutomode}
                                     ></img>
                                 }
                             </td>

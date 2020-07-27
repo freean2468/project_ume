@@ -28,6 +28,7 @@ export default function NavCenter(props) {
     fetch(`/api/search?id=${props.nav.search.res[key]}`)
     .then(res => res.json())
     .then(res => {
+      props.nav.channel.init();
       props.nav.channel.setValue(res);
     });
   }
