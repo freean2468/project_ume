@@ -67,19 +67,20 @@ function useYPlayer(vid) {
           setTimeout(buffer,120);
         } else {
           // console.log('buffering completed');
-          player.seekTo(seekTime, true);
-          player.pauseVideo();
           player.unMute();
+          player.pauseVideo();
+          player.seekTo(seekTime, true);
           setSeekTime(-1);
         }
       };
       setTimeout(buffer,120);
       player.mute();
+      player.playVideo();
     }
   },[player, seekTime]);
 
   function seekToAndLoad(newVid, seconds) {
-    console.log('-------------------------seekToAndLoad--------------------');
+    // console.log('----------------seekToAndLoad----------------');
     if (vid !== newVid) {
       setSeekTime(seconds);
       textDisplay.initiateDisplay(newVid);
@@ -108,22 +109,22 @@ function useYPlayer(vid) {
 
     switch (state) {
       case -1:  // doesn't begin
-        console.log('not begin'); 
+        // console.log('not begin'); 
         break;
       case 0: // ended
-        console.log('ended');
+        // console.log('ended');
         break;
       case 1: // playing
-        console.log('playing');
+        // console.log('playing');
         break;
       case 2: // pause
-        console.log('pause');
+        // console.log('pause');
         break;
       case 3: //  buffering
-        console.log('buffering');
+        // console.log('buffering');
         break;
       case 5: // CUED
-        console.log('cued');
+        // console.log('cued');
         e.target.seekTo(seekTime, true);
         break;
     }

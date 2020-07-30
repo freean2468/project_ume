@@ -35,7 +35,6 @@ export default function UIDisplay(props) {
     };
 
     function handleClickPlay(e, st) {
-        console.log('------------------handleCLickPlay------------');
         e.stopPropagation();
         props.route.yplayer.setSeekTime(st);
         props.route.yplayer.player.seekTo(st, true);
