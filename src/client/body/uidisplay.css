@@ -12,24 +12,21 @@
     height:fit-content; */
 
 	position: absolute;
-	background: rgba(0,0,0,0.5);
+	background:rgba(0, 0, 0, 1);
     border-radius: .4em;
     top:50%;
     left:50%;
+    width:100%;
+    height:100%;
     
-    transform: translate3d(-50%, -50%, 0) scale(0, 0);
+    transform: translate3d(50%, -50%, 0) scale(0, 1);
     pointer-events:auto;
-    transition: transform .3s
-                cubic-bezier(0.25, 0.1, 0.25, 1.0);
-    overflow: hidden;
+    transition: transform .3s cubic-bezier(0.25, 0.1, 0.25, 1.0);
     z-index:1;
 
     font-size : 1.5em;
-    padding : 4em 4em;
 
-    padding-left: -1em;
-    text-indent: 1em;
-    text-align:left;
+    pointer-events: none;
 }
 
 .UIDisplay .ScriptDisplay:after {
@@ -50,14 +47,166 @@
     transform: translate3d(-50%, -50%, 0) scale(1, 1);
 }
 
-.UIDisplay .ScriptDisplay .ScriptToken {
-    border:1px white solid;
+.UIDisplay .ScriptDisplay .Inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width:100%;
+    /* align-items: left; */
+    box-sizing: border-box;
+    overflow-x:hidden;
+    overflow-y:auto;
+    pointer-events: auto;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken {
+    position:relative;
+    display:flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-shrink:0;
+
+    box-sizing:border-box;
+
     transition : transform .3s cubic-bezier(1, 0, 0, 1);
+    pointer-events:auto;
+    overflow-y:auto;
+    text-align:left;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken:hover {
+    /* transform : scale(1.05, 1.05); */
+    background-color:rgba(30, 30, 30, 1);
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .Token {
+   cursor:pointer;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .Token.Selected {
+    border:1px solid white;
+    color:yellow;
+ }
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken table td {
+    padding:0.5em;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfoContainer {
+    border: 0.05em solid white;
+    border-radius: 10px;
+    width:fit-content;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo {
+    border-collapse: collapse;
+    white-space: nowrap;
+    width:auto;
+    background-color: rgba(158, 69, 69, 0.1);
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .StrtToken b,
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo b {
+    color:yellow;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo td{
+    text-align:center;
+    border: 0.001em solid RGB(255,255,255,0.5);
+    padding: 0 0.1em;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr:first-child td {
+    border-top: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr td:first-child {
+    border-left: 0;
+    border-bottom: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo:last-child tr td:last-child {
+    border-right: 0;
+    border-bottom: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr:nth-child(2) td:not(:first-child),
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr:first-child td:not(:first-child){
+    border-top: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr:nth-child(2) td:not(:first-child),
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TrstInfo tr:first-child td:not(:first-child){
+    border-bottom: 0;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail:hover {
     cursor:pointer;
 }
 
-.UIDisplay .ScriptDisplay .ScriptToken:hover {
-    transform : scale(1.05, 1.05);
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail img{
+    transform : scale(1, 1);
+    transition : transform .3s cubic-bezier(0.23, 0.25, 0.25, 1);
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail:hover img{
+    transform : scale(1.1, 1.1);
+    transition : transform .3s cubic-bezier(0.23, 0.25, 0.25, 1);
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo {
+    display: inline-block;
+    border: 0.05em solid white;
+    border-radius: 10px;
+    white-space:nowrap;
+    pointer-events:none;
+    background-color: rgba(158, 69, 69, 0.1);
+    width:auto;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo td {
+    padding:0;
+    text-align:center;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken {
+    text-align:center;
+    display:inline-table;
+    border-collapse:collapse;
+    background-color: rgba(158, 69, 69, 0.1);
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken td {
+    text-align:center;
+    border: 0.001em solid RGB(255,255,255,0.5);
+    padding: 0 0.1em;
+    max-width:15em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken tr:first-child td{
+    border-bottom: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken tr:last-child td{
+    border-top: 0;
+    border-bottom: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken:first-child tr td:first-child{
+    border-left: 0;
+    border-bottom: 0;
+}
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .StrtInfo .StrtToken:last-child tr td:last-child{
+    border-right: 0;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .CmtContainer{
+    /* vertical-align:bottom; */
+    text-align:left;
+    width:auto;
+}
+
+.UIDisplay .ScriptDisplay .Inner .ScriptToken .TokenDetail .Indicator {
+    /* text-align:bottom; */
+    /* display:inline-block; */
+    padding-top:0.50em;
+    padding-left:0;
+    padding-right:0;
+    width:0.1em;
 }
 
 .UIDisplay .UIContainer {
@@ -102,9 +251,21 @@
     filter: invert(100%) sepia(1%) saturate(280%) hue-rotate(147deg) brightness(119%) contrast(100%);
     cursor:pointer;
     pointer-events:auto;
+    z-index:1000;
 }
 
 .UIDisplay .UIContainer .ScriptIcon:hover{
     transform : scale(1.2, 1.2);
     transition : transform .3s cubic-bezier(1, 0, 0, 1);
+}
+
+.UIDisplay .Clickable{
+    cursor:pointer;
+    transform : scale(1, 1);
+    transition : transform .3s cubic-bezier(0.23, 0.25, 0.25, 1);
+}
+
+.UIDisplay .Clickable:hover{
+    transform : scale(1.1, 1.1);
+    transition : transform .3s cubic-bezier(0.23, 0.25, 0.25, 1);
 }

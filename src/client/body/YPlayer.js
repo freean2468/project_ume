@@ -59,11 +59,27 @@ function useYPlayer(vid) {
 
   const textDisplay = useTextDisplay(player);
 
-  function seekTo(seconds) {
-    player.seekTo(seconds, true);
-  }
+  useEffect(() => {
+    if (seekTime !== -1 && player !== null) {
+      function buffer() {
+        if (player.getVideoLoadedFraction() < 0.3) {
+          // console.log(player.getVideoLoadedFraction());
+          setTimeout(buffer,120);
+        } else {
+          // console.log('buffering completed');
+          player.seekTo(seekTime, true);
+          player.pauseVideo();
+          player.unMute();
+          setSeekTime(-1);
+        }
+      };
+      setTimeout(buffer,120);
+      player.mute();
+    }
+  },[player, seekTime]);
 
   function seekToAndLoad(newVid, seconds) {
+    console.log('-------------------------seekToAndLoad--------------------');
     if (vid !== newVid) {
       setSeekTime(seconds);
       textDisplay.initiateDisplay(newVid);
@@ -99,34 +115,15 @@ function useYPlayer(vid) {
         break;
       case 1: // playing
         console.log('playing');
-        if (seekTime !== -1) {
-          console.log('seektime');
-          e.target.pauseVideo();
-          e.target.seekTo(seekTime, true);
-          e.target.unMute();
-          setSeekTime(-1);
-        }
         break;
       case 2: // pause
         console.log('pause');
         break;
       case 3: //  buffering
         console.log('buffering');
-        if (seekTime !== -1) {
-          function buffer(time) {
-            if (e.target.getVideoLoadedFraction() < 0.2) {
-              setTimeout(buffer.bind(null, time),120);
-            } else {
-              console.log('buffering completed');
-              e.target.seekTo(time, true);
-            }
-          }
-          setTimeout(buffer.bind(null, seekTime),120);
-        }
         break;
       case 5: // CUED
         console.log('cued');
-        e.target.mute();
         e.target.seekTo(seekTime, true);
         break;
     }
@@ -143,7 +140,6 @@ function useYPlayer(vid) {
     handleError,
     handleStateChange,
 
-    seekTo,
     seekToAndLoad
   };
 }

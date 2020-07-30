@@ -19,7 +19,7 @@ function TextDisplay(props) {
                     <WdToken key={idx} wd={wd} abIdx={idx} textDisplay={props.route.yplayer.textDisplay}/>
                 )}
             </div>
-            {(props.route.yplayer.textDisplay.videoInfo) &&
+            {(props.route.yplayer.textDisplay.videoInfo && props.route.yplayer.textDisplay.displayRef.current) &&
                 <UIDisplay route={props.route}/>
             }
         </>
@@ -157,10 +157,10 @@ function useTextDisplay(player) {
                 }
             }
 
-            console.log('initiating TextDisplay completed');
+            // console.log('initiating TextDisplay completed');
             setScrt(scrt);
             cv.setValue(cvList);
-            setPlayingTime(playingTime-0.1);
+            setPlayingTime(playingTime+0.1);
         });
     };
 
