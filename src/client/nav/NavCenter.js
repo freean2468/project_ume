@@ -14,12 +14,12 @@ export default function NavCenter(props) {
   },[]);
 
   function onClickOutsideHandler(event) {
-      if (searchRef.current.contains(event.target)) {
-        props.nav.search.setIsSearchFocus(true);
-      } else {
-        props.nav.search.setIsSearchFocus(false);
-      }
-  }
+    if (searchRef.current.contains(event.target)) {
+      props.nav.search.setIsSearchFocus(true);
+    } else {
+      props.nav.search.setIsSearchFocus(false);
+    }
+  };
   
   function handleClickRes(e, key) {
     props.nav.search.setSelected(key);
@@ -31,29 +31,54 @@ export default function NavCenter(props) {
       props.nav.channel.init();
       props.nav.channel.setValue(res);
     });
-  }
+  };
 
   function handleChange(value) {
-      if (value === ''){
-        props.nav.search.setRes({});
-        props.nav.search.setValue('');
-        props.nav.channel.setValue(null);
-      } else if (value !== '') {
-        const filter = /^['a-zA-Z-/$/@]+$/;
-  
-        if (filter.test(value[0])) {
-          props.nav.search.setValue(value);
-  
-          fetch(`/api/preSearch?search=${value}`)
-          .then(res => res.json())
-          .then(res => { 
-            props.nav.search.setRes(res); 
-          });
-        } else {
-          props.nav.search.setValue("@");
-        }
+    props.nav.search.setIsSearchFocus(true);
+
+    if (value === ''){
+      props.nav.search.setRes({});
+      props.nav.search.setValue('');
+      props.nav.channel.setValue(null);
+    } else if (value !== '') {
+      const filter = /^['a-zA-Z-/$/@]+$/;
+
+      if (filter.test(value[0])) {
+        props.nav.search.setValue(value);
+
+        fetch(`/api/preSearch?search=${value}`)
+        .then(res => res.json())
+        .then(res => { 
+          props.nav.search.setRes(res); 
+        });
+      } else {
+        props.nav.search.setValue("@");
       }
-  } 
+    }
+  };
+
+  function handleKeyPress(e){
+    if(e.key === 'Enter'){
+      if (props.nav.search.res[props.nav.search.value]) {
+        props.nav.search.setSelected(props.nav.search.value);
+
+        fetch(`/api/search?id=${props.nav.search.res[props.nav.search.value]}`)
+        .then(res => res.json())
+        .then(res => {
+          props.nav.channel.init();
+          console.log(res);
+          props.nav.channel.setValue(res);
+        });
+      } else {
+        props.nav.channel.init();
+        props.nav.channel.setValue({
+          rt:props.nav.search.value,
+          wd_m:[],
+          strt_m:[]
+        });
+      }
+    }
+  };
 
   return (
     <div className="NavCenter" ref={centerRef}>
@@ -63,6 +88,7 @@ export default function NavCenter(props) {
                     value={props.nav.search.value}
                     placeholder="english, @한글, $game_title"
                     onChange={(e) => handleChange(e.target.value)}
+                    onKeyPress={handleKeyPress}
                 />
                 <img className="SearchIcon"
                     src={searchSvg} alt="search button" 
