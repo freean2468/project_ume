@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const outputDirectory = 'dist';
 
@@ -8,7 +9,10 @@ module.exports = {
   entry: ['babel-polyfill', './src/client/index.js'],
   output: {
     path: path.join(__dirname, outputDirectory),
-    filename: 'bundle.js'
+    // publicPath: outputDirectory+'/',
+    filename: '[name].bundle.js',
+    chunkFilename:'[name].bundle.js'
+    // chunkFilename: mode === 'production' ? '[name].[chunkhash].js' : '[name].[hash].js'
   },
   module: {
     rules: [{
@@ -48,6 +52,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico'
-    })
+    }),
+    new BundleAnalyzerPlugin()
   ]
 };

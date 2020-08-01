@@ -24,12 +24,14 @@ export default function NavCenter(props) {
   function handleClickRes(e, key) {
     props.nav.search.setSelected(key);
     props.nav.search.setValue(key);
+    props.nav.channel.init();
+    props.nav.channel.setIsLoading(true);
 
     fetch(`/api/search?id=${props.nav.search.res[key]}`)
     .then(res => res.json())
     .then(res => {
-      props.nav.channel.init();
       props.nav.channel.setValue(res);
+      props.nav.channel.setIsLoading(false);
     });
   };
 
@@ -61,13 +63,15 @@ export default function NavCenter(props) {
     if(e.key === 'Enter'){
       if (props.nav.search.res[props.nav.search.value]) {
         props.nav.search.setSelected(props.nav.search.value);
+        props.nav.channel.init();
+        props.nav.channel.setIsLoading(true);
+        props.nav.search.setIsSearchFocus(false);
 
         fetch(`/api/search?id=${props.nav.search.res[props.nav.search.value]}`)
         .then(res => res.json())
         .then(res => {
-          props.nav.channel.init();
-          console.log(res);
           props.nav.channel.setValue(res);
+          props.nav.channel.setIsLoading(false);
         });
       } else {
         props.nav.channel.init();

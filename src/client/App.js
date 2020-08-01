@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
-import Nav from './nav/Nav';
-import Body from './body/Body';
+import React, { useState, Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+const Nav = lazy(() => import(
+  /* webpackChunkName: "nav" */
+  /* webpackPrefetch: true */
+  './nav/Nav'));
+const Body = lazy(() => import(
+  /* webpackChunkName: "body" */
+  /* webpackPrefetch: true */
+  './body/Body'));
+const Footer = lazy(() => import(
+  /* webpackChunkName: "footer" */
+  /* webpackPrefetch: true */
+  './footer/Footer'));
+
 import { useYPlayer } from './body/YPlayer';
-import Footer from './footer/Footer';
 import './app.css';
 
 export default function App () {
   const route = useRoute();
 
   return (
-    <div className="AppContainer">
-      <Nav route={route}/>
-      <Body route={route}/>
-      <Footer />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="AppContainer">
+        <Nav route={route}/>
+        <Body route={route}/>
+        <Footer />
+      </div>
+    </Suspense>
   );
 }
 

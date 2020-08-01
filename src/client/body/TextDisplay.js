@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from '../../../node_modules/react'
 import WdToken from './WdToken';
 import './textdisplay.css'
 import UIDisplay from './UIDisplay';
+import {LoaderFull} from '../common/Loader';
 
 function TextDisplay(props) {
     return (
@@ -16,11 +17,14 @@ function TextDisplay(props) {
                 }}>
                 {props.route.yplayer.textDisplay.playingIndex >= 0 &&
                     props.route.yplayer.textDisplay.scrt[props.route.yplayer.textDisplay.playingIndex].map((wd, idx)=>
-                    <WdToken key={idx} wd={wd} abIdx={idx} textDisplay={props.route.yplayer.textDisplay}/>
+                        <WdToken key={idx} wd={wd} abIdx={idx} textDisplay={props.route.yplayer.textDisplay}/>
                 )}
             </div>
             {(props.route.yplayer.textDisplay.videoInfo && props.route.yplayer.textDisplay.displayRef.current) &&
                 <UIDisplay route={props.route}/>
+            }
+            {props.route.yplayer.textDisplay.isLoading &&
+                <LoaderFull/>
             }
         </>
     );
@@ -67,6 +71,7 @@ function useTextDisplay(player) {
     const [selectedIdx, setSelectedIdx] = useState(null);
     const [preSelectedIdx, setPreSelectedIdx] = useState(null);
     const [isAuto, setIsAuto] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -84,6 +89,7 @@ function useTextDisplay(player) {
     },[playingTime]);
 
     function initiateDisplay(vid) {
+        setIsLoading(true);
         fetch(`/api/getVideo?id=${encodeURIComponent(vid)}`)
         .then(res => res.json())
         .then(json => {
@@ -161,6 +167,7 @@ function useTextDisplay(player) {
             setScrt(scrt);
             cv.setValue(cvList);
             setPlayingTime(playingTime+0.1);
+            setIsLoading(false);
         });
     };
 
@@ -256,6 +263,7 @@ function useTextDisplay(player) {
         selectedIdx,
         preSelectedIdx,
         isAuto,
+        isLoading,
 
         initiateDisplay,
         triggerAutomode,

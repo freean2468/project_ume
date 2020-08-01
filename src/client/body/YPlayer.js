@@ -9,9 +9,7 @@ function YPlayer(props) {
 
   useEffect(() => {
     textDisplayContainerEl.setAttribute('class', 'TextDisplayContainer');
-  }, []);
 
-  useEffect(() => {
     const container = document.getElementsByClassName(props.container)[0];
     container.appendChild(textDisplayContainerEl);
     return () => {
@@ -60,27 +58,39 @@ function useYPlayer(vid) {
   const textDisplay = useTextDisplay(player);
 
   useEffect(() => {
-    if (seekTime !== -1 && player !== null) {
-      function buffer() {
-        if (player.getVideoLoadedFraction() < 0.3) {
-          // console.log(player.getVideoLoadedFraction());
+    function buffer() {
+      if (player.getPlayerState() === 3 || player.getPlayerState() === -1) {
+        player.mute();
+        player.playVideo();
+        console.log(player.getVideoLoadedFraction());
+        setTimeout(buffer,120);
+      } else {
+        console.log('buffering completed');
+        player.playVideo();
+        player.pauseVideo();
+        player.seekTo(seekTime, true);
+
+        if (player.getPlayerState() === 3) {
+          player.mute();
+          player.playVideo();
+          console.log(player.getVideoLoadedFraction());
           setTimeout(buffer,120);
         } else {
-          // console.log('buffering completed');
           player.unMute();
-          player.pauseVideo();
-          player.seekTo(seekTime, true);
           setSeekTime(-1);
         }
-      };
-      setTimeout(buffer,120);
+      }
+    };
+    
+    if (seekTime !== -1 && player !== null) {
       player.mute();
       player.playVideo();
-    }
-  },[player, seekTime]);
+      setTimeout(buffer,120);
+    } 
+  },[player, player && player.getPlayerState(), seekTime]);
 
   function seekToAndLoad(newVid, seconds) {
-    // console.log('----------------seekToAndLoad----------------');
+    console.log('----------------seekToAndLoad----------------');
     if (vid !== newVid) {
       setSeekTime(seconds);
       textDisplay.initiateDisplay(newVid);
@@ -109,22 +119,22 @@ function useYPlayer(vid) {
 
     switch (state) {
       case -1:  // doesn't begin
-        // console.log('not begin'); 
+        console.log('not begin'); 
         break;
       case 0: // ended
-        // console.log('ended');
+        console.log('ended');
         break;
       case 1: // playing
-        // console.log('playing');
+        console.log('playing');
         break;
       case 2: // pause
-        // console.log('pause');
+        console.log('pause');
         break;
       case 3: //  buffering
-        // console.log('buffering');
+        console.log('buffering');
         break;
       case 5: // CUED
-        // console.log('cued');
+        console.log('cued');
         e.target.seekTo(seekTime, true);
         break;
     }
