@@ -210,12 +210,12 @@ function useChannel() {
   };
 
   function beforeSetSelected(data) {
-    setList([]);
     if (data === selected) {
-      setSelected(null);
+      set(null, []);
+      setIsCardLoading(false);
     } else {
       setIsCardLoading(true);
-      setSelected(data);
+      set(data, []);
     }
   };
 

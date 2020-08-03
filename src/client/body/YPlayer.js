@@ -58,15 +58,6 @@ function useYPlayer(vid) {
 
   const textDisplay = useTextDisplay(player);
 
-  // useEffect(() => {
-  //   if (player !== null && seekTime !== -1) {
-  //     console.log('2');
-  //     player.mute();
-  //     player.seekTo(seekTime, true);
-  //     player.playVideo();
-  //   }
-  // },[player, seekTime]);
-
   useEffect(() => {
     if (!player) return;
 
