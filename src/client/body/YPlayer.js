@@ -28,7 +28,7 @@ function YPlayer(props) {
         // onPause={handleOnPause} 
         // onPlay={handleOnPlay}
         onReady={props.route.yplayer.handleReady}
-        onStateChange={props.route.yplayer.handleStateChange}
+        // onStateChange={props.route.yplayer.handleStateChange}
         onError={props.route.yplayer.handleError}
       />
       {ReactDOM.createPortal(
@@ -54,68 +54,23 @@ function useYPlayer(vid) {
   });
   const [player, setPlayer] = useState(null);
   const [seekTime, setSeekTime] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const textDisplay = useTextDisplay(player);
 
+  // useEffect(() => {
+  //   if (player !== null && seekTime !== -1) {
+  //     console.log('2');
+  //     player.mute();
+  //     player.seekTo(seekTime, true);
+  //     player.playVideo();
+  //   }
+  // },[player, seekTime]);
+
   useEffect(() => {
-    function buffer() {
-      if (player.getPlayerState() === 3 || player.getPlayerState() === -1) {
-        player.mute();
-        player.playVideo();
-        console.log(player.getVideoLoadedFraction());
-        setTimeout(buffer,120);
-      } else {
-        console.log('buffering completed');
-        player.playVideo();
-        player.pauseVideo();
-        player.seekTo(seekTime, true);
+    if (!player) return;
 
-        if (player.getPlayerState() === 3) {
-          player.mute();
-          player.playVideo();
-          console.log(player.getVideoLoadedFraction());
-          setTimeout(buffer,120);
-        } else {
-          player.unMute();
-          setSeekTime(-1);
-        }
-      }
-    };
-    
-    if (seekTime !== -1 && player !== null) {
-      player.mute();
-      player.playVideo();
-      setTimeout(buffer,120);
-    } 
-  },[player, player && player.getPlayerState(), seekTime]);
-
-  function seekToAndLoad(newVid, seconds) {
-    console.log('----------------seekToAndLoad----------------');
-    if (vid !== newVid) {
-      setSeekTime(seconds);
-      textDisplay.initiateDisplay(newVid);
-    } else {
-      player.seekTo(seconds, true);
-    }
-  };
-
-  function handleReady(e) {
-    handleStateChange(e);
-
-    // access to player in all event handlers via event.target
-    setPlayer(e.target);
-  };
-
-  function handleError(e) {
-    switch (e.data) {
-      default:
-        console.log('error occurd in yplayer : ', e.data);
-        break;
-    }
-  };
-
-  function handleStateChange(e) {
-    const state = e.target.getPlayerState();
+    const state = player.getPlayerState();
 
     switch (state) {
       case -1:  // doesn't begin
@@ -123,19 +78,68 @@ function useYPlayer(vid) {
         break;
       case 0: // ended
         console.log('ended');
+        player.seekTo(0, true);
+        player.pauseVideo();
         break;
       case 1: // playing
         console.log('playing');
+        if (isBuffering && seekTime !== -1) {
+          console.log('in:1');
+          player.pauseVideo();
+          player.seekTo(seekTime, true);
+        } else if (seekTime !== -1) {
+          console.log('in:2');
+          player.pauseVideo();
+          player.seekTo(seekTime, true);
+        }
         break;
       case 2: // pause
         console.log('pause');
+        if (seekTime !== -1) {
+          if (isBuffering === false) {
+            player.playVideo();
+            setIsBuffering(true);
+          } else {
+            setSeekTime(-1);
+            player.unMute();
+            setIsBuffering(false);
+          }
+        }
         break;
       case 3: //  buffering
         console.log('buffering');
+        player.mute();
+        setIsBuffering(true);
         break;
       case 5: // CUED
         console.log('cued');
-        e.target.seekTo(seekTime, true);
+        player.mute();
+        player.seekTo(seekTime, true);
+        player.playVideo();
+        break;
+    }
+  }, [player && player.getPlayerState()]);
+
+  function seekToAndLoad(newVid, seconds) {
+    console.log('----------------seekToAndLoad----------------');
+    if (vid !== newVid || (player && (vid === newVid && parseFloat(seconds) === player.getCurrentTime()))) {
+      setSeekTime(seconds);
+      setIsBuffering(false);
+      textDisplay.initiateDisplay(newVid);
+    } else {
+      player.seekTo(seconds, true);
+    }
+  };
+
+  function handleReady(e) {
+    // access to player in all event handlers via event.target
+    setPlayer(e.target);
+  };
+
+  function handleError(e) {
+    switch (e.data) {
+      default:
+        console.log('error occurred in yplayer : ', e.data);
         break;
     }
   };
@@ -149,7 +153,6 @@ function useYPlayer(vid) {
 
     handleReady,
     handleError,
-    handleStateChange,
 
     seekToAndLoad
   };

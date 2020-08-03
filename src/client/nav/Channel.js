@@ -7,8 +7,8 @@ export default function Channel(props) {
         props.nav.channel.beforeSetSelected(data);
     };
 
-    function handleClickCard(vid, st) {
-        props.route.set(vid, st);
+    function handleClickCard(data) {
+        props.route.set(data.vid, data.st);
     }
 
     return (
@@ -51,7 +51,7 @@ export default function Channel(props) {
             <div className="ShowWindow" style={props.nav.channel.showWindowStyle()}>
                 {props.nav.channel.list.length > 0 ?
                     props.nav.channel.list.map((data, idx) =>
-                        <span className="Card" key={idx} onClick={(e)=>handleClickCard(data.vid, data.st)}>
+                        <span className="Card" key={idx} onClick={(e)=>handleClickCard(data)}>
                             {data.isCardImageLoading ?
                                 <div className="Loader"/>
                             :
