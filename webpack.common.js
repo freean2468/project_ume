@@ -1,7 +1,7 @@
 const path = require('path');
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const outputDirectory = 'dist';
 
@@ -48,11 +48,14 @@ module.exports = {
     }
   },
   plugins: [
+    // new webpack.DefinePlugin({
+    //   'process.env.NODE_ENV': argv.mode
+    // }),
+    // new webpack.EnvironmentPlugin({ DEBUG: "on" }),
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico'
-    }),
-    new BundleAnalyzerPlugin()
+    })
   ]
 };
