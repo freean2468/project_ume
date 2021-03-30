@@ -26,6 +26,7 @@ yarn start (or npm start)
 ### 제작 상세
  * 개발 기간 : 2020.05.25 ~ 2020.08.03
  * 개발 : 송훈일
+ * 태스크 관리 : https://trello.com/b/N9WgXNl7/projectume
 
 ### 개발 환경
  * Visual Studio Code v.1.54.3
