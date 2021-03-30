@@ -116,7 +116,7 @@ export default function NavCenter(props) {
 function BoldedText(text, shouldBeBold) {
   const textArray = text.split(shouldBeBold);
   return (
-    <span key>
+    <span>
       {textArray.map((item, index) => (
         <span key={index}>
           {item}
